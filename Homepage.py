@@ -83,7 +83,7 @@ color6 = '#FFC736' #sunflower
 
 
 #st.set_page_config(page_title="👴💵📖 Grandpa Warren", layout="wide")
-warren_logo_path = "Finance_TikTok_prototype/ai_tiktok_prototype-main/V2 young warren logo.png"
+warren_logo_path = "Finance_TikTok_prototype/AI_TikTok_prototype/V2 young warren logo.png"
 st.set_page_config(page_title="Young Warren",page_icon=warren_logo_path)
 st.image(warren_logo_path,width = 100)
 st.title("pov: ur tired of fake finance bros")
@@ -146,8 +146,26 @@ with col3:
 # I believe this goes in the file where all the functionality is configured, at the end
 st.markdown("""
 <style>
+  * {
+    border-radius: 0 !important;
+  }
   .stChatInput, .stChatMessage, .stChatMessageAvatarUser, .stExpander, button, .stDataFrameResizable, table, .stCheckbox span, .stWidgetLabel div, .stNumberInputContainer div, .stExpander details, .stDialog div {
-  	border-radius: none !important;
+  	bordr-radius: 0 !important;
+  }
+  div.stButton > button:first-child{
+  background-color:black;
+  color:white;
+  border-color:black;
+  }
+  .stChatMessage:has([aria-label='Chat message from user']) {
+    background: #F4F3EE;
+    text-align: right;
+  }
+  [aria-label='Chat message from user'] {
+    background-color: #F4F3EE;
+  }
+  .stSidebar {
+    display: none;
   }
 </style>
 """, unsafe_allow_html=True)
