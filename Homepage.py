@@ -83,7 +83,7 @@ color6 = '#FFC736' #sunflower
 
 
 #st.set_page_config(page_title="👴💵📖 Grandpa Warren", layout="wide")
-warren_logo_path = "V2 young warren logo.png"
+warren_logo_path = "assets/V2 young warren logo.png"
 st.set_page_config(page_title="Young Warren",page_icon=warren_logo_path)
 st.image(warren_logo_path,width = 100)
 st.title("pov: ur tired of fake finance bros")
@@ -113,10 +113,10 @@ user_select_video = st.session_state['user_select_video']
 
 
 col1, col2, col3 = st.columns(3, gap = "small")
-
+video_data_path = "video_data/videos"
 with col1:
     #st.caption(videos_to_analyse[0])
-    st.video(os.path.join("Finance_TikTok_prototype/corpus/videos","video"+str(indexes_to_analyse[0]) + ".mp4"))
+    st.video(os.path.join(video_data_path,"video"+str(indexes_to_analyse[0]) + ".mp4"))
     var_click1 = st.button("vibe check this one",type="primary",key = "button1",use_container_width=True)
 
     if var_click1 == True:
@@ -125,7 +125,7 @@ with col1:
 
 with col2:
     #st.caption(videos_to_analyse[1])
-    st.video(os.path.join("Finance_TikTok_prototype/corpus/videos","video"+str(indexes_to_analyse[1]) + ".mp4"))
+    st.video(os.path.join(video_data_path,"video"+str(indexes_to_analyse[1]) + ".mp4"))
     var_click2 = st.button("vibe check this one", type="primary",key = "button2",use_container_width=True)
 
     if var_click2 == True:
@@ -135,7 +135,7 @@ with col2:
 
 with col3:
     #st.caption(videos_to_analyse[2])
-    st.video(os.path.join("Finance_TikTok_prototype/corpus/videos","video"+str(indexes_to_analyse[2]) + ".mp4"))
+    st.video(os.path.join(video_data_path,"video"+str(indexes_to_analyse[2]) + ".mp4"))
     var_click3 = st.button("vibe check this one", type="primary",key = "button3",use_container_width=True)
 
     if var_click3 == True:

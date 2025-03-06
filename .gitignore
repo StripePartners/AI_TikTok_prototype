@@ -1,0 +1,8 @@
+#ignore pycache files
+__pycache__/
+#ignore pyc files
+*.pyc
+#ignoring everything in the video_data folder
+video_data/*
+#ignoring everything in the letters folder
+letters/*
