@@ -83,7 +83,7 @@ color6 = '#FFC736' #sunflower
 
 
 #st.set_page_config(page_title="👴💵📖 Grandpa Warren", layout="wide")
-warren_logo_path = "Finance_TikTok_prototype/ai_tiktok_prototype-main/V2 young warren logo.png"
+warren_logo_path = "V2 young warren logo.png"
 st.set_page_config(page_title="Young Warren",page_icon=warren_logo_path)
 st.image(warren_logo_path,width = 100)
 st.title("pov: ur tired of fake finance bros")
