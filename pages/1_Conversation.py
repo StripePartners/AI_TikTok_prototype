@@ -4,48 +4,105 @@ import ast
 import ollama
 import os
 import sys
+import pickle
+from langchain.vectorstores import FAISS
+from langchain.embeddings import HuggingFaceEmbeddings
 
 from openai import OpenAI
 from nltk import sent_tokenize
 
 
+# Load FAISS index and metadata
+vector_dbs_path = '/Users/zoeliou/Documents/GitHub/AI_TikTok_prototype/vector_dbs/'
+faiss_path = vector_dbs_path + "faiss_index"
+metadata_path = faiss_path + "/faiss_metadata.pkl"
+embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+
+db = FAISS.load_local(faiss_path, embedding_model, allow_dangerous_deserialization=True)
+with open(metadata_path, "rb") as f:
+    metadata_list = pickle.load(f)
+print(f"Loaded {len(metadata_list)} metadata entries")
+
+def retrieve_context(query, k=3):
+    """Retrieve relevant documents from FAISS and return text with creator info"""
+    docs = db.similarity_search(query, k=k)
+    retrieved_info = []
+    
+    for doc in docs:
+        creator = next((meta["creator"] for meta in metadata_list if meta["text"] == doc.page_content), "Unknown")
+        retrieved_info.append(f"Creator: {creator}\nContent: {doc.page_content}")
+    
+    return "\n\n".join(retrieved_info)
+
 def chatbot(start_msg):
-    # Set up the chat bot
-  
-    #Initialize conversation history
     if "messages" not in st.session_state:
         st.session_state["messages"] = []
 
-    # Initialize models
     if "model" not in st.session_state:
         st.session_state["model"] = "llama3:8b"
 
-    # Display chat messages from history on app rerun
     for message in st.session_state["messages"]:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
     if prompt := st.chat_input(start_msg):
-        # add latest message to history in format {role, content}
         st.session_state["messages"].append({"role": "user", "content": prompt})
-
+        
+        context = retrieve_context(prompt)
+        system_prompt = f"""You are an AI assistant with the following knowledge base:\n{context}\n\nAnswer the user's question based on this information."""
+        
         with st.chat_message("user"):
             st.markdown(prompt)
-
-        with st.chat_message("assistant",avatar = warren_logo_path):
-            message = st.write_stream(model_res_generator())
+        
+        with st.chat_message("assistant"):
+            message = st.write_stream(model_res_generator(system_prompt))
             st.session_state["messages"].append({"role": "assistant", "content": message})
 
-def model_res_generator():
+# def chatbot(start_msg):
+#     # Set up the chat bot
+  
+#     #Initialize conversation history
+#     if "messages" not in st.session_state:
+#         st.session_state["messages"] = []
+
+#     # Initialize models
+#     if "model" not in st.session_state:
+#         st.session_state["model"] = "llama3:8b"
+
+#     # Display chat messages from history on app rerun
+#     for message in st.session_state["messages"]:
+#         with st.chat_message(message["role"]):
+#             st.markdown(message["content"])
+
+#     if prompt := st.chat_input(start_msg):
+#         # add latest message to history in format {role, content}
+#         st.session_state["messages"].append({"role": "user", "content": prompt})
+
+#         with st.chat_message("user"):
+#             st.markdown(prompt)
+
+#         with st.chat_message("assistant",avatar = warren_logo_path):
+#             message = st.write_stream(model_res_generator())
+#             st.session_state["messages"].append({"role": "assistant", "content": message})
+
+# def model_res_generator():
+#     stream = ollama.chat(
+#         model=st.session_state["model"],
+#         messages=st.session_state["messages"],
+#         stream=True,
+#     )
+#     for chunk in stream:
+#         yield chunk["message"]["content"]
+
+def model_res_generator(context):
+    messages = [{"role": "system", "content": context}] + st.session_state["messages"]
     stream = ollama.chat(
         model=st.session_state["model"],
-        messages=st.session_state["messages"],
+        messages=messages,
         stream=True,
     )
     for chunk in stream:
         yield chunk["message"]["content"]
-
-
 
 
 warren_logo_path = "assets/V2 young warren logo.png"

@@ -6,3 +6,5 @@ __pycache__/
 video_data/*
 #ignoring everything in the letters folder
 letters/*
+#ignoring everything in the vector_dbs folder
+vector_dbs/*
