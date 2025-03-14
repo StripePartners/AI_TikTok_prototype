@@ -7,8 +7,17 @@ from langchain.vectorstores import FAISS
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.docstore.document import Document
 import pickle
+from google import genai
+import re
 
+### Set up keys
+# Read the Gemini key from a txt file
+gemini_key_path = '/Users/zoeliou/Documents/GitHub/AI_TikTok_prototype/gemini_key.txt'
+with open(gemini_key_path, 'r') as file:
+    gemini_key = file.read().strip()
+print("Gemini key read successfully.")
 
+### Load theb PDFs
 # add letters directory
 letters_dir = '/Users/zoeliou/Documents/GitHub/AI_TikTok_prototype/letters'
 print("Contents of 'letters' directory:", os.listdir(letters_dir))
@@ -26,6 +35,10 @@ for pdf in pdfs:
     pdf_path = os.path.join(letters_dir, pdf)
     loader = PyPDFLoader(pdf_path)
     pages = loader.load()
+    # Update metadata for each page
+    for page in pages:
+        new_doc_name = 'Berkshire Hathaway letters to shareholders - ' + re.findall(r'\d+', pdf)[0]
+        page.metadata["document_name"] = new_doc_name
     page_list.append(pages)
 
 flat_list = [item for sublist in page_list for item in sublist]
@@ -35,8 +48,13 @@ text_splitter = TokenTextSplitter(chunk_size=1000, chunk_overlap=0)
 texts = text_splitter.split_documents(flat_list)
 
 # Extract text content and metadata from Document objects
-text_documents = [Document(page_content=doc.page_content, metadata={"creator": doc.metadata.get("creator", "Unknown")}) for doc in texts]
+# Metadata includes creator, total pages, and page label
+text_documents = [Document(page_content=doc.page_content, 
+                           metadata={"document_name": doc.metadata.get("document_name", "Unknown"), 
+                                     "total_pages": doc.metadata.get("total_pages", "Unknown"),
+                                     "page_label": doc.metadata.get("page_label", "Unknown")}) for doc in texts]
 
+### Load embedding models
 # Initialize embeddings model (using a free local model)
 embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
@@ -49,8 +67,32 @@ faiss_path = vector_dbs_path + "faiss_index"
 db.save_local(faiss_path)
 
 # Save metadata separately
-metadata_list = [{"text": doc.page_content, "creator": doc.metadata["creator"]} for doc in text_documents]
+metadata_list = [{"text": doc.page_content, 
+                  "document_name": doc.metadata["document_name"],
+                  "total_pages": doc.metadata["total_pages"],
+                  "page_label": doc.metadata["page_label"],} for doc in text_documents]
 with open(faiss_path+"/faiss_metadata.pkl", "wb") as f:
     pickle.dump(metadata_list, f)
 
 print("Vector database stored successfully with metadata.")
+
+# # Initialize embeddings model (using Google API)
+# client = genai.Client(api_key=gemini_key)
+# def get_google_embeddings(texts):
+#     return [client.models.embed_content(model="gemini-embedding-exp-03-07", contents=text).embeddings for text in texts]
+
+
+# embeddings = get_google_embeddings([doc.page_content for doc in text_documents])
+# db = FAISS.from_embeddings(embeddings, text_documents)
+
+# # Save FAISS index
+# vector_dbs_path = '/Users/zoeliou/Documents/GitHub/AI_TikTok_prototype/vector_dbs/'
+# faiss_path = vector_dbs_path + "faiss_index"
+# db.save_local(faiss_path)
+
+# # Save metadata separately
+# metadata_list = [{"text": doc.page_content, "creator": doc.metadata["creator"]} for doc in text_documents]
+# with open(faiss_path+"/faiss_metadata.pkl", "wb") as f:
+#     pickle.dump(metadata_list, f)
+
+# print("Vector database stored successfully with metadata.")

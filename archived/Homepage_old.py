@@ -87,8 +87,7 @@ st.image(warren_logo_path,width = 100)
 st.title("pov: ur tired of fake finance bros")
 st.write("young warren is ready to be in your corner")
 
-# df = pd.read_csv("https://docs.google.com/spreadsheets/d/1naC0k4dQUOXXWEmSdLR3EVbyr8mBUYZ2KwZziwSleUA/export?gid=126339389&format=csv") # the whole sample
-df = pd.read_csv("https://docs.google.com/spreadsheets/d/1naC0k4dQUOXXWEmSdLR3EVbyr8mBUYZ2KwZziwSleUA/export?gid=1702026903&format=csv") # small sample of videos
+df = pd.read_csv("https://docs.google.com/spreadsheets/d/1naC0k4dQUOXXWEmSdLR3EVbyr8mBUYZ2KwZziwSleUA/export?gid=126339389&format=csv")
 
 #st.dataframe(df)
 #st.scatter_chart(df,x = "Index",y="View Count",color ="Investment Category")
@@ -120,8 +119,7 @@ with col1:
     if var_click1 == True:
         st.session_state['user_select_video'] = {"index":indexes_to_analyse[0],
                                                  "transcript":df[df['Index'] == indexes_to_analyse[0]]["transcript"].iloc[0],
-                                                 "ocr_captions":ast.literal_eval(df[df['Index'] == indexes_to_analyse[0]]["OCR_captions"].iloc[0]),
-                                                 "video_type_in_app": df[df['Index'] == indexes_to_analyse[0]]["video_type_in_app"].iloc[0]} #or whatever default
+                                                 "ocr_captions":ast.literal_eval(df[df['Index'] == indexes_to_analyse[0]]["OCR_captions"].iloc[0])} #or whatever default
         st.switch_page("pages/1_Conversation.py")
 
 with col2:
@@ -132,8 +130,7 @@ with col2:
     if var_click2 == True:
         st.session_state['user_select_video'] = {"index":indexes_to_analyse[1],
                                                  "transcript":df[df['Index'] == indexes_to_analyse[1]]["transcript"].iloc[0],
-                                                 "ocr_captions":ast.literal_eval(df[df['Index'] == indexes_to_analyse[1]]["OCR_captions"].iloc[0]),
-                                                 "video_type_in_app": df[df['Index'] == indexes_to_analyse[1]]["video_type_in_app"].iloc[0]} #or whatever default
+                                                 "ocr_captions":ast.literal_eval(df[df['Index'] == indexes_to_analyse[1]]["OCR_captions"].iloc[0])} #or whatever default
         st.switch_page("pages/1_Conversation.py")
 
 
@@ -145,8 +142,7 @@ with col3:
     if var_click3 == True:
         st.session_state['user_select_video'] = {"index":indexes_to_analyse[2],
                                                  "transcript":df[df['Index'] == indexes_to_analyse[2]]["transcript"].iloc[0],
-                                                 "ocr_captions":ast.literal_eval(df[df['Index'] == indexes_to_analyse[2]]["OCR_captions"].iloc[0]),
-                                                 "video_type_in_app": df[df['Index'] == indexes_to_analyse[2]]["video_type_in_app"].iloc[0]} #or whatever default
+                                                 "ocr_captions":ast.literal_eval(df[df['Index'] == indexes_to_analyse[2]]["OCR_captions"].iloc[0])} #or whatever default
         st.switch_page("pages/1_Conversation.py")
 
 

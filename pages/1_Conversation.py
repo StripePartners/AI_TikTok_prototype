@@ -10,6 +10,7 @@ from langchain.embeddings import HuggingFaceEmbeddings
 
 from openai import OpenAI
 from nltk import sent_tokenize
+import time
 
 
 # Load FAISS index and metadata
@@ -19,21 +20,77 @@ metadata_path = faiss_path + "/faiss_metadata.pkl"
 embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
 db = FAISS.load_local(faiss_path, embedding_model, allow_dangerous_deserialization=True)
+
+# Load metadata
 with open(metadata_path, "rb") as f:
     metadata_list = pickle.load(f)
 print(f"Loaded {len(metadata_list)} metadata entries")
 
+# Define function to retrieve context
 def retrieve_context(query, k=3):
     """Retrieve relevant documents from FAISS and return text with creator info"""
     docs = db.similarity_search(query, k=k)
     retrieved_info = []
-    
-    for doc in docs:
-        creator = next((meta["creator"] for meta in metadata_list if meta["text"] == doc.page_content), "Unknown")
-        retrieved_info.append(f"Creator: {creator}\nContent: {doc.page_content}")
+    # Get a unique list of document names being searched
+    doc_names = {doc.metadata.get("document_name", "Unknown Document") for doc in docs}
+
+    # Display a spinner while searching (maybe the spinner can by run line by line)
+    with st.spinner(f"Searching in: {', '.join(doc_names)}"):
+        for doc in docs:
+            # creator = next((meta["creator"] for meta in metadata_list if meta["text"] == doc.page_content), "Unknown")
+            metadata = next((meta for meta in metadata_list if meta["text"] == doc.page_content), {})
+            document_name = metadata.get("document_name", "Unknown")
+            page_label = metadata.get("page_label", "Unknown")
+            retrieved_info.append(f"Document name: {document_name}\nPage number: {page_label}\nContent: {doc.page_content}")
+            print(retrieved_info)
+        time.sleep(5)
     
     return "\n\n".join(retrieved_info)
 
+### Prompt
+# no need to mentioned doc name and page 
+# the tone and personality is in the second bit. it's based on 200 vidoes transcripts
+
+def get_prompt(context, current_v_transcript):
+    system_prompt = f"""
+    You are an investment assistant with access to the following retrieved documents:\n{context}\n\n
+    You also know that users have watched the following video and thisis the video transcript: \n{current_v_transcript}\n\n
+    Based on this information, answer the user's question. \n
+
+    While responding to the user, you have to following the instructions below:\n
+    1. Mention the document name and page number from retrieved documents in your response.\n
+    2. Adapt your response to the personality and tone based on the video transcript.\n
+    3. Repurposing FOMO (Fear of Missing Out)\n
+        - Channel FOMO toward long-term thinking:\n
+            - Create urgency around positive financial habits rather than specific volatile investments.\n
+            - Use timelines and visualizations showing the "cost of delay" for retirement savings or debt repayment.\n
+            - For example, "Don't miss out on the power of compound interest - waiting even 5 years to start investing could cost you thousands in future growth"
+        - Redirect FOMO to financial literacy:
+            - Generate excitement about learning opportunities rather than get-rich-quick schemes\n
+            - For example, "The #1 advantage wealthy people have isn't secret investments - it's financial knowledge. Here's what you're missing if you don't understand these three concepts..."
+    4. Be ethical use of confidence\n
+        - Project confidence in proven principles:\n
+            - Be extremely confident about well-established financial wisdom\n
+            - Use strong, decisive language when discussing fundamentals that have stood the test of time\n
+            - Maintain a confident, authoritative tone when countering misinformation\n
+            - For example, "Dollar-cost averaging consistently outperforms market timing for 90% of retail investors"
+        - Confidence calibration\n
+            - Be transparent about confidence levels\n
+            - Express certainty proportional to evidence quality\n
+            - For example, "I'm 95% confident about this advice because it's backed by decades of research" vs. "This is a newer approach with promising but limited data"
+    5. Be responsible authority leveraging\n
+        - Democratize expert knowledge\n
+            - Translate complex insights from trusted authorities into actionable steps for beginners\n
+            - Position the chatbot as a conduit to expert wisdom, not the ultimate authority itself\n
+            - For example, "Here's what Warren Buffett does that you can actually replicate"
+        - Build a trust network\n
+            - Cite multiple authorities when they agree on principles\n
+            - Explain credentials in relatable terms: "This economist has correctly predicted 7 of the last 10 market shifts"\n
+            - Compare and contrast different expert opinions when appropriate\n
+    """
+    return system_prompt
+
+# Define chatbot function
 def chatbot(start_msg):
     if "messages" not in st.session_state:
         st.session_state["messages"] = []
@@ -47,9 +104,10 @@ def chatbot(start_msg):
 
     if prompt := st.chat_input(start_msg):
         st.session_state["messages"].append({"role": "user", "content": prompt})
-        
+
+        current_v_transcript = st.session_state.get("user_select_video", {}).get("transcript", "No transcript available.")
         context = retrieve_context(prompt)
-        system_prompt = f"""You are an AI assistant with the following knowledge base:\n{context}\n\nAnswer the user's question based on this information."""
+        system_prompt = get_prompt(context, current_v_transcript)
         
         with st.chat_message("user"):
             st.markdown(prompt)
@@ -104,8 +162,8 @@ def model_res_generator(context):
     for chunk in stream:
         yield chunk["message"]["content"]
 
-
-warren_logo_path = "assets/V2 young warren logo.png"
+asset_path = '/Users/zoeliou/Documents/GitHub/AI_TikTok_prototype/assets/'
+warren_logo_path = asset_path + "V2 young warren logo.png"
 st.set_page_config(page_title="Young Warren",page_icon=warren_logo_path)
 st.image(warren_logo_path,width = 100)
 st.title("pov: ur tired of fake finance bros")
@@ -117,7 +175,15 @@ with short_col:
     try:
         st.subheader("Video")
         st.video(os.path.join("video_data/videos","video"+str(st.session_state["user_select_video"]["index"]) + ".mp4"))
+        
+        # Retrieve and display the transcript
+        transcript = st.session_state["user_select_video"].get("transcript", "No transcript available.")
+        st.subheader("Transcript")
+        st.text_area("Video Transcript", transcript, height=200)
         alarm = 1
+
+        print(st.session_state["user_select_video"].get("video_type_in_app", "unknown"))
+
     except:
         st.write("You need to pick a video to analyse first.")
 
