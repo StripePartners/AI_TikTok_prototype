@@ -117,11 +117,12 @@ with col1:
     st.video(os.path.join(video_data_path,"video"+str(indexes_to_analyse[0]) + ".mp4"))
     var_click1 = st.button("vibe check this one",type="primary",key = "button1",use_container_width=True)
 
-    if var_click1 == True:
+    if var_click1:
         st.session_state['user_select_video'] = {"index":indexes_to_analyse[0],
                                                  "transcript":df[df['Index'] == indexes_to_analyse[0]]["transcript"].iloc[0],
                                                  "ocr_captions":ast.literal_eval(df[df['Index'] == indexes_to_analyse[0]]["OCR_captions"].iloc[0]),
                                                  "video_type_in_app": df[df['Index'] == indexes_to_analyse[0]]["video_type_in_app"].iloc[0]} #or whatever default
+        st.session_state["messages"] = []  # Reset chatbot history
         st.switch_page("pages/1_Conversation.py")
 
 with col2:
@@ -129,11 +130,12 @@ with col2:
     st.video(os.path.join(video_data_path,"video"+str(indexes_to_analyse[1]) + ".mp4"))
     var_click2 = st.button("vibe check this one", type="primary",key = "button2",use_container_width=True)
 
-    if var_click2 == True:
+    if var_click2:
         st.session_state['user_select_video'] = {"index":indexes_to_analyse[1],
                                                  "transcript":df[df['Index'] == indexes_to_analyse[1]]["transcript"].iloc[0],
                                                  "ocr_captions":ast.literal_eval(df[df['Index'] == indexes_to_analyse[1]]["OCR_captions"].iloc[0]),
                                                  "video_type_in_app": df[df['Index'] == indexes_to_analyse[1]]["video_type_in_app"].iloc[0]} #or whatever default
+        st.session_state["messages"] = []  # Reset chatbot history
         st.switch_page("pages/1_Conversation.py")
 
 
@@ -142,11 +144,12 @@ with col3:
     st.video(os.path.join(video_data_path,"video"+str(indexes_to_analyse[2]) + ".mp4"))
     var_click3 = st.button("vibe check this one", type="primary",key = "button3",use_container_width=True)
 
-    if var_click3 == True:
+    if var_click3:
         st.session_state['user_select_video'] = {"index":indexes_to_analyse[2],
                                                  "transcript":df[df['Index'] == indexes_to_analyse[2]]["transcript"].iloc[0],
                                                  "ocr_captions":ast.literal_eval(df[df['Index'] == indexes_to_analyse[2]]["OCR_captions"].iloc[0]),
                                                  "video_type_in_app": df[df['Index'] == indexes_to_analyse[2]]["video_type_in_app"].iloc[0]} #or whatever default
+        st.session_state["messages"] = []  # Reset chatbot history
         st.switch_page("pages/1_Conversation.py")
 
 
