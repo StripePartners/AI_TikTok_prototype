@@ -8,3 +8,5 @@ video_data/*
 letters/*
 #ignoring everything in the vector_dbs folder
 vector_dbs/*
+#ignoring everything in the behavioural_sci_doc folder
+behavioural_sci_doc/*

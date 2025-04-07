@@ -26,26 +26,23 @@ with open(metadata_path, "rb") as f:
     metadata_list = pickle.load(f)
 print(f"Loaded {len(metadata_list)} metadata entries")
 
-# Define function to retrieve context
-def retrieve_context(query, k=3):
-    """Retrieve relevant documents from FAISS and return text with creator info"""
-    docs = db.similarity_search(query, k=k)
-    retrieved_info = []
-    # Get a unique list of document names being searched
-    # doc_names = {doc.metadata.get("document_name", "Unknown Document") for doc in docs}
+##### TEST #####
+# query = "What is the best way to invest in stocks?"
+# results = db.similarity_search(query, k=3, filter={"document_type": "letters"})
+# for res, score in results:
+#     print(f"* [SIM={score:3f}] {res.page_content} [{res.metadata}]")
 
-    # Display a spinner while searching (maybe the spinner can by run line by line)
+# Define function to retrieve context
+def retrieve_context(query, document_type, k=3):
+    """Retrieve relevant documents from FAISS and return text with creator info"""
+    docs = db.similarity_search(query, filter={"document_type": document_type}, k=k)
+    all_content = []
     with st.spinner("Running..."):
         for doc in docs:
-            # creator = next((meta["creator"] for meta in metadata_list if meta["text"] == doc.page_content), "Unknown")
-            metadata = next((meta for meta in metadata_list if meta["text"] == doc.page_content), {})
-            document_name = metadata.get("document_name", "Unknown")
-            page_label = metadata.get("page_label", "Unknown")
-            retrieved_info.append(f"Document name: {document_name}\nPage number: {page_label}\nContent: {doc.page_content}")
-            print(retrieved_info)
+            all_content.append(doc.page_content) # store all content retrieved in a list
         time.sleep(5)
     
-    return "\n\n".join(retrieved_info)
+    return "\n\n".join(all_content), docs
 
 ### Prompt
 # define prompts for different video types
@@ -128,7 +125,7 @@ def chatbot(start_msg):
 
         current_v_transcript = st.session_state.get("user_select_video", {}).get("transcript", "No transcript available.")
         current_v_type = st.session_state.get("user_select_video", {}).get("video_type_in_app", "unknown")
-        context = retrieve_context(prompt)
+        context, docs = retrieve_context(prompt)
         
         # create system prompt based on video type
         system_prompt = get_prompt(context, current_v_transcript, video_in_app_type=current_v_type)
