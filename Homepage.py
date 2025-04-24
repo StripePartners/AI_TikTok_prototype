@@ -4,8 +4,6 @@ import ast
 import ollama
 import os
 import sys
-
-from openai import OpenAI
 from nltk import sent_tokenize
 
 
