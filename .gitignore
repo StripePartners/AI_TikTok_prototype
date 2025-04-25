@@ -2,6 +2,8 @@
 __pycache__/
 #ignore pyc files
 *.pyc
+#ignore env
+env/
 #ignoring everything in the video_data folder
 assets/video_data/*
 #ignoring everything in the letters folder

@@ -77,7 +77,8 @@ def model_res_generator(system_prompt):
     stream = ollama.chat(
         model=st.session_state["model"],
         messages=messages,
-        stream=True,
+        stream=True
+        # options={"num_predict": 150} # Set maximum number of tokens to predict
     )
     
     # Streams response text chunk by chunk

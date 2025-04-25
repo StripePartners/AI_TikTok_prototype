@@ -1,0 +1,7 @@
+langchain==0.3.24
+langchain_community==0.3.22
+nltk==3.9.1
+ollama==0.4.8
+openai==1.76.0
+pandas==2.2.3
+streamlit==1.44.1
