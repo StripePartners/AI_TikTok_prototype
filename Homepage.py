@@ -78,7 +78,7 @@ color6 = '#FFC736' #sunflower
 
 
 #st.set_page_config(page_title="👴💵📖 Grandpa Warren", layout="wide")
-asset_path = '/Users/zoeliou/Documents/GitHub/AI_TikTok_prototype/assets/'
+asset_path = './assets/'
 warren_logo_path = asset_path + "V2 young warren logo.png"
 st.set_page_config(page_title="Young Warren",page_icon=warren_logo_path)
 st.image(warren_logo_path,width = 100)
@@ -109,7 +109,7 @@ user_select_video = st.session_state['user_select_video']
 
 
 col1, col2, col3 = st.columns(3, gap = "small")
-video_data_path = "video_data/videos"
+video_data_path = "assets/video_data/videos"
 with col1:
     #st.caption(videos_to_analyse[0])
     st.video(os.path.join(video_data_path,"video"+str(indexes_to_analyse[0]) + ".mp4"))

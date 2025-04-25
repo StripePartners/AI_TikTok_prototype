@@ -85,7 +85,7 @@ def model_res_generator(system_prompt):
         yield chunk["message"]["content"]
 
 ##### app functions #####
-asset_path = '/Users/zoeliou/Documents/GitHub/AI_TikTok_prototype/assets/'
+asset_path = './assets/'
 warren_logo_path = asset_path + "V2 young warren logo.png"
 st.set_page_config(page_title="Young Warren",page_icon=warren_logo_path)
 st.image(warren_logo_path,width = 100)
@@ -97,7 +97,7 @@ alarm = 0 # check if a video was chosen yet
 with short_col:
     try:
         st.subheader("Video")
-        st.video(os.path.join("video_data/videos","video"+str(st.session_state["user_select_video"]["index"]) + ".mp4"))
+        st.video(os.path.join("assets/video_data/videos","video"+str(st.session_state["user_select_video"]["index"]) + ".mp4"))
         
         # Retrieve and display the transcript
         transcript = st.session_state["user_select_video"].get("transcript", "No transcript available.")

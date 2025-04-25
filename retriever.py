@@ -1,12 +1,12 @@
 import streamlit as st
 import os
 import pickle
-from langchain.vectorstores import FAISS
-from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings import HuggingFaceEmbeddings
 import time
 
 ##### Load FAISS index and metadata #####
-vector_dbs_path = '/Users/zoeliou/Documents/GitHub/AI_TikTok_prototype/vector_dbs/'
+vector_dbs_path = './vector_dbs/'
 faiss_path = vector_dbs_path + "faiss_index"
 metadata_path = faiss_path + "/faiss_metadata.pkl"
 embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")

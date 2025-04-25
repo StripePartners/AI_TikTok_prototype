@@ -7,19 +7,19 @@ from langchain.vectorstores import FAISS
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.docstore.document import Document
 import pickle
-from google import genai
+# from google import genai
 import re
 
 ##### Set up keys #####
 # Read the Gemini key from a txt file
-gemini_key_path = '/Users/zoeliou/Documents/GitHub/AI_TikTok_prototype/gemini_key.txt'
-with open(gemini_key_path, 'r') as file:
-    gemini_key = file.read().strip()
-print("Gemini key read successfully.")
+# gemini_key_path = './gemini_key.txt'
+# with open(gemini_key_path, 'r') as file:
+#     gemini_key = file.read().strip()
+# print("Gemini key read successfully.")
 
 ##### Load theb PDFs - Letters #####
 # add letters directory
-letters_dir = '/Users/zoeliou/Documents/GitHub/AI_TikTok_prototype/letters'
+letters_dir = './assets/letters'
 print("Contents of 'letters' directory:", os.listdir(letters_dir))
 
 # Identify the various PDF files
@@ -59,7 +59,7 @@ text_documents = [Document(page_content=doc.page_content,
 
 ##### Load theb PDFs - Books #####
 # add letters directory
-books_dir = '/Users/zoeliou/Documents/GitHub/AI_TikTok_prototype/behavioural_sci_doc'
+books_dir = './assets/books'
 print("Contents of 'books' directory:", os.listdir(books_dir))
 
 # Identify the various PDF files
@@ -102,7 +102,7 @@ embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-Mi
 db = FAISS.from_documents(combined_knowledge, embedding_model)
 
 # Save FAISS index
-vector_dbs_path = '/Users/zoeliou/Documents/GitHub/AI_TikTok_prototype/vector_dbs/'
+vector_dbs_path = './vector_dbs/'
 faiss_path = vector_dbs_path + "faiss_index"
 db.save_local(faiss_path)
 
