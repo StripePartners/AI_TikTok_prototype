@@ -41,3 +41,24 @@ streamlit run Homepage.py
 ```
 
 - NB: ensure the `assets/video_data/videos` folder is populated with relevant videos.
+
+## Run Evaluation
+
+1. Factual probing:
+- set the OpenAI and Anthropic API keys:
+```bash
+export OPENAI_API_KEY="xyz"
+export ANTHROPIC_API_KEY="xyz"
+```
+- to run a particular model, run the following command:
+   - This script will run the relevant model and store the responses in a csv file.
+   - NB: ensure the `model_name` parameter is set to the desired OpenAI, Claude, or Ollama model.
+   - NB: ensure to set the `include_context` parameter to `False` if the knowledge based is not needed.
+```bash
+python factual_probe_eval.py
+```
+- to evaluate scores of the responses of a model, run the following command:
+```bash
+cd evaluation
+python eval.py
+```
