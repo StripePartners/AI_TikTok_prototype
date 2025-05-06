@@ -93,4 +93,4 @@ for _, row in df.iterrows():
     results.append({"question": question, "gold_answer": gold_answer, "llm_response": llm_response})
 
 results_df = pd.DataFrame(results)
-results_df.to_csv('./evaluation/factual_probe_results_gpt_4o.csv', index=False)
+results_df.to_csv('./evaluation/factual_probe/results/gpt_4o.csv', index=False)

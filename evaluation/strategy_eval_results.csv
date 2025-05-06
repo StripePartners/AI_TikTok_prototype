@@ -1,0 +1,404 @@
+model,kb_included,video_index,video_type,question,response,video_transcript,notes,fomo_actual,auth_actual,overconf_actual,fomo_predicted,auth_predicted,overconf_predicted,overlap,exact_match,score
+claude-3-5-sonnet-20240620,TRUE,5,mix,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The video primarily employs overconfidence and authority bias strategies.
+
+Overconfidence is evident in the presenter's assertive statements about AI's rapid growth and the potential gains for semiconductor companies. Phrases like ""every six months, it's 10x-ing"" and confidently naming specific stocks (Nvidia, Broadcom) suggest a high level of certainty in these investment choices.
+
+Authority bias is utilized when the presenter refers to ""people that are experts in that field"" to support claims about AI's growth. This appeals to viewers' tendency to trust expert opinions.
+
+While there's a subtle hint of FOMO in discussing the AI trend, it's not as prominently used as the other two strategies. The video mainly relies on projecting confidence in specific investment choices and referencing expert opinions to persuade viewers.","It's the top three stock that I'd invest in right now. If you look at what's happening in the world, you see AI, and if you listen to people that are experts in that field, you'll realize that every six months, it's 10x-ing. In other words, you're in a situation where AI is becoming better and better. So what companies are going to gain because of AI? So I go with the people that produce the shovels. In other words, when there was a gold rush, lots of people sold their farms, sold their businesses, and off went looking for gold. Actually, you can go look for how you can use AI, or you can actually look at who's producing the shovels. In this case, it's semiconductors, people producing chips, Nvidia, of course, is one, Broadcom is another. For me, I will be investing in the companies producing the shovels. What about you? What's the best things to invest in right now, in your opinion? Leave a comment below.","All 3 strategies mentioned, with fomo to a lesser degree
+
+Actual label: mix of fomo, overconfidence, and authority bias",1,1,1,1,1,1,1,1,
+claude-3-5-sonnet-20240620,TRUE,12,overconfidence,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The primary strategy used in this video is overconfidence. The video exhibits several signs of overconfidence bias:
+
+1. Bold predictions about stocks reaching $1 trillion valuations
+2. Assertive language like ""absolutely insane"" and ""well positioned to capitalize""
+3. Emphasis on positive growth metrics without discussing risks
+4. Confident statements about future performance, e.g., ""I expect this company to join the $1 trillion club soon""
+
+The video promotes a sense of certainty about future stock performance and market trends, encouraging viewers to believe they have unique insights into these companies' potential. This overconfident tone can lead viewers to feel more assured about making investment decisions based on the presented information, potentially overlooking the complexities and risks inherent in stock market investing.","Here's three stocks to buy before they're worth $1 trillion. First stock is Broadcom. There's two reasons why I really like Broadcom. First one is being the recent announcement of them launching Bellarine. This product looks absolutely insane and this is going to help increase their competition in the AI industry. Number two is the launch of their private cloud platform, which will improve AI autonomy. Second stock is Visa. The Federal Reserve said that cash transactions accounted for 16% of all transactions in 2024, so clearly the preference for digital payments is increasing. And Visa is well positioned to capitalize on this, being the leader in the industry. Third stock is Walmart. In their previous earnings report, they reported that total revenues were up 5.5% year-over-year. With advertising being one of their new revenue streams, this grew 28%. And with their e-commerce business really starting to catch fire, being the second largest behind Amazon, I expect this company to join the $1 trillion club soon. Make sure to follow for more stock market content.",,0,0,1,0,0,1,1,1,
+claude-3-5-sonnet-20240620,TRUE,32,overconfidence,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The primary strategy used in this video is overconfidence. The speaker displays a strong belief in their ability to predict and capitalize on crypto market cycles, stating ""I'm going to capitalize on it this time. I'm not letting anything... pass me by."" This overconfident attitude is evident throughout the video, as the speaker presents a seemingly simple and predictable pattern for crypto market behavior.
+
+There's also an element of FOMO (Fear of Missing Out) present. The speaker implies that people who understand this cycle consistently profit from it, stating ""People know this and they capitalize on it every single time."" This could trigger viewers' fear of missing out on potential gains if they don't follow the described pattern.
+
+The combination of overconfidence and FOMO creates a compelling narrative that may encourage viewers to believe they can easily profit from crypto market cycles.","Mastering the crypto cycle is extremely easy and this is how it works. First Bitcoin pumps, then Ethereum pumps, then all of the altcoins pump, then the midcaps pump, then the market drops and microcaps pump. And then the market goes sideways, this is where it gets boring and people start to leave the market. This is where we pay attention the most. Then you have the meme coins pump, the market bleeds, people start yelling that this is a scam and they get angry and this is when I see miserable couch potatoes in my comments, you know, talking about crypto is a scam. Then we get the final dump and then we restart. People know this and they capitalize on it every single time. I'm going to capitalize on it this time. I'm not letting anything, no midcap, no altcoin, no Bitcoin, no meme coin pass me by.",Identifies overconfidence as main strategy but also highlights some element of FOMO,0,0,1,1,0,1,1,0,
+claude-3-5-sonnet-20240620,TRUE,83,mix,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The video primarily employs overconfidence and FOMO strategies.
+
+Overconfidence is evident in the speaker's assertive language and claims of superior market knowledge. Phrases like ""People like me, we are buying this stuff. We know when this takes off"" demonstrate an exaggerated belief in their abilities and insights.
+
+FOMO is triggered by statements suggesting a fleeting opportunity, such as ""This is your last opportunity to get these altcoins at these cheap-ass prices"" and ""It's too late to go back."" These create urgency and fear of missing potential gains.
+
+The combination of overconfident predictions and time-sensitive language aims to push viewers into making quick investment decisions based on the speaker's seemingly authoritative market analysis.","This is your last opportunity to get these altcoins at these cheap-ass prices. This market is going to take off on you. It is sitting at the 3A2, just like it was the previous cycle. And I'm not talking about an individual crypto altcoin, I'm talking about all the damn altcoins. That is the whole altcoin market cap, $586 billion. That's all of them. Sitting at the 3A2, this is normal. Anybody not understanding this that don't know how to chart, they are wasting valuable, valuable time in the market. They don't know what they're doing. People like me, we are buying this stuff. We know when this takes off. It's too late to go back. It ain't coming back down to the 3A2. It's been there for freaking months.","Identifies overconfidence and FOMO as strategies 
+
+Overconfidence mentioned as additonal strategy.
+Actual label: mix of fomo and loss aversion",1,0,0,1,0,1,1,0,
+claude-3-5-sonnet-20240620,TRUE,96,fomo,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The video primarily uses two strategies: FOMO and Overconfidence.
+
+FOMO is evident in the way the speaker highlights the rapid price increase of XRP, stating ""People are waking up today mega rich"" and asking viewers how much profit they've made. This creates a sense of urgency and fear of missing out on potential gains.
+
+Overconfidence is displayed through the bullish price predictions mentioned, with people saying XRP could hit £5, £10, or even £200. The speaker's tone and language, such as ""where can this stop?"", further encourages an overconfident attitude towards XRP's future performance.
+
+These strategies aim to create excitement and unrealistic expectations, potentially influencing viewers to make hasty investment decisions based on emotion rather than careful analysis.","XRP is trading at £2.08 today. As you can see, it's up 36% today, and up 8.6% in the last hour. People are waking up today mega rich. I mean, where can this stop? People are saying it's gonna hit £5, people are saying it's gonna hit £10, people are saying it's gonna hit £200. Comment below and let me know how much money you're in profit from today.","Identifies overconfidence as a main strategy, not just FOMO",1,0,1,1,0,0,1,0,
+claude-3-5-sonnet-20240620,TRUE,250,authority_bias,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The primary strategy used in this video is Authority Bias. The speaker positions themselves as an authority figure by recommending a specific book to people who ask for investing advice. This establishes credibility and trust in their recommendation.
+
+There's also a subtle hint of FOMO (Fear of Missing Out) when the speaker suggests that this book might be the ""key to finally becoming a girl that invests,"" implying that viewers might miss out on valuable investing knowledge if they don't read it.
+
+Overconfidence is not prominently used in this video. The speaker actually acknowledges feeling overwhelmed and intimidated by the stock market, which counters the overconfidence strategy.
+
+In summary, the video primarily leverages Authority Bias to persuade viewers, with a slight touch of FOMO to encourage action.","Whenever people ask me, hey I want to start investing but I do not know where to start, this is the book I recommend to them. Girls Don't Invest is a very simple, uncomplicated, step-by-step, walk-you-through-from-start-to-finish guide on investing in the stock market. This book walks you through the key reasons to start investing, common misconceptions, and key steps to take with your personal finances before entering the stock market. And finally, nailing down your investing strategy. This book came in clutch at a time when I felt overwhelmed and intimidated by the stock market and didn't know where to start. So to anyone who's currently in that situation, this might be your key to finally becoming a girl that invests.",Identifies authority bias as main strategy but also highlights some element of FOMO,1,1,0,0,1,0,1,0,
+claude-3-5-sonnet-20240620,FALSE,5,mix,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The video primarily employs a mix of FOMO and Authority Bias strategies.
+
+FOMO is evident in the way the speaker emphasizes the rapid growth of AI, stating it's ""10x-ing"" every six months. This creates a sense of urgency and fear of missing out on potential investment opportunities.
+
+Authority Bias is used when the speaker refers to ""experts in that field,"" lending credibility to the claims about AI's growth and importance.
+
+The speaker doesn't explicitly display overconfidence, but rather presents his investment choices as logical conclusions based on the AI trend and historical parallels (like the gold rush).
+
+By combining these strategies, the video aims to persuade viewers to consider investing in semiconductor companies as a way to capitalize on the AI boom.","It's the top three stock that I'd invest in right now. If you look at what's happening in the world, you see AI, and if you listen to people that are experts in that field, you'll realize that every six months, it's 10x-ing. In other words, you're in a situation where AI is becoming better and better. So what companies are going to gain because of AI? So I go with the people that produce the shovels. In other words, when there was a gold rush, lots of people sold their farms, sold their businesses, and off went looking for gold. Actually, you can go look for how you can use AI, or you can actually look at who's producing the shovels. In this case, it's semiconductors, people producing chips, Nvidia, of course, is one, Broadcom is another. For me, I will be investing in the companies producing the shovels. What about you? What's the best things to invest in right now, in your opinion? Leave a comment below.","Identifies mix of fomo and authority bias, but not overconfidence
+
+Actual label: mix of all 3",1,1,1,1,1,0,1,0,
+claude-3-5-sonnet-20240620,FALSE,12,overconfidence,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The video primarily uses a combination of FOMO and overconfidence strategies.
+
+FOMO is evident in the title ""stocks to buy before they're worth $1 trillion,"" implying viewers might miss out on significant gains if they don't act quickly.
+
+Overconfidence is displayed through bullish statements about each company's potential, such as Broadcom's ""absolutely insane"" product and Walmart ""joining the $1 trillion club soon."" The presenter uses confident language and positive projections to encourage belief in these stocks' future success.
+
+While there's a brief mention of the Federal Reserve regarding cash transactions, it's not prominently used to establish authority, so authority bias is less significant in this video compared to the other two strategies.","Here's three stocks to buy before they're worth $1 trillion. First stock is Broadcom. There's two reasons why I really like Broadcom. First one is being the recent announcement of them launching Bellarine. This product looks absolutely insane and this is going to help increase their competition in the AI industry. Number two is the launch of their private cloud platform, which will improve AI autonomy. Second stock is Visa. The Federal Reserve said that cash transactions accounted for 16% of all transactions in 2024, so clearly the preference for digital payments is increasing. And Visa is well positioned to capitalize on this, being the leader in the industry. Third stock is Walmart. In their previous earnings report, they reported that total revenues were up 5.5% year-over-year. With advertising being one of their new revenue streams, this grew 28%. And with their e-commerce business really starting to catch fire, being the second largest behind Amazon, I expect this company to join the $1 trillion club soon. Make sure to follow for more stock market content.","States FOMO as a primary strategy, not just overconfidence",0,0,1,1,0,1,1,0,
+claude-3-5-sonnet-20240620,FALSE,32,overconfidence,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The video primarily uses two strategies: FOMO and Overconfidence.
+
+FOMO is evident in the speaker's description of the crypto cycle, implying that those who understand it can profit at each stage. The statement ""I'm not letting anything... pass me by"" directly appeals to the fear of missing out on opportunities.
+
+Overconfidence is displayed through the speaker's assertion that mastering the crypto cycle is ""extremely easy"" and their certainty about capitalizing on every part of the cycle. The confident tone and claims of predictability in market movements further reinforce this strategy.
+
+There's no clear use of Authority Bias in this video, as the speaker doesn't cite experts or authority figures to support their claims.","Mastering the crypto cycle is extremely easy and this is how it works. First Bitcoin pumps, then Ethereum pumps, then all of the altcoins pump, then the midcaps pump, then the market drops and microcaps pump. And then the market goes sideways, this is where it gets boring and people start to leave the market. This is where we pay attention the most. Then you have the meme coins pump, the market bleeds, people start yelling that this is a scam and they get angry and this is when I see miserable couch potatoes in my comments, you know, talking about crypto is a scam. Then we get the final dump and then we restart. People know this and they capitalize on it every single time. I'm going to capitalize on it this time. I'm not letting anything, no midcap, no altcoin, no Bitcoin, no meme coin pass me by.","States FOMO as a primary strategy, not just overconfidence",0,0,1,1,0,1,1,0,
+claude-3-5-sonnet-20240620,FALSE,83,mix,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","This video primarily employs FOMO and overconfidence strategies.
+
+FOMO is evident in statements like ""This is your last opportunity"" and ""When this takes off. It's too late to go back,"" creating urgency and fear of missing potential gains.
+
+Overconfidence is displayed through assertive language and claims of superior knowledge, such as ""People like me, we are buying this stuff. We know when this takes off"" and dismissing those who don't understand as ""wasting valuable time.""
+
+The speaker presents themselves as an authority figure with special insight, but doesn't explicitly cite external experts, so authority bias is less prominent than the other two strategies.
+
+These tactics aim to pressure viewers into making quick investment decisions based on the speaker's confident predictions and fear of missing out.","This is your last opportunity to get these altcoins at these cheap-ass prices. This market is going to take off on you. It is sitting at the 3A2, just like it was the previous cycle. And I'm not talking about an individual crypto altcoin, I'm talking about all the damn altcoins. That is the whole altcoin market cap, $586 billion. That's all of them. Sitting at the 3A2, this is normal. Anybody not understanding this that don't know how to chart, they are wasting valuable, valuable time in the market. They don't know what they're doing. People like me, we are buying this stuff. We know when this takes off. It's too late to go back. It ain't coming back down to the 3A2. It's been there for freaking months.","Identifies mix of fomo and overconfidence but not authority bias
+
+Overconfidence is mentioned as an additional strategy.
+Actual label: mix of fomo and loss aversion",1,0,0,1,0,1,1,0,
+claude-3-5-sonnet-20240620,FALSE,96,fomo,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The video primarily employs two strategies: FOMO and Overconfidence.
+
+FOMO is evident in statements like ""People are waking up today mega rich"" and asking viewers how much profit they've made, implying others are already benefiting greatly.
+
+Overconfidence is displayed through the bullish predictions of XRP's price, with claims it could reach £5, £10, or even £200. The use of phrases like ""mega rich"" and highlighting large percentage gains also promotes an overly optimistic view.
+
+These tactics combined aim to create excitement and urgency around XRP, potentially encouraging viewers to invest based on emotional reactions rather than careful analysis. The video lacks any mention of risks or balanced information, further emphasizing these persuasive strategies.","XRP is trading at £2.08 today. As you can see, it's up 36% today, and up 8.6% in the last hour. People are waking up today mega rich. I mean, where can this stop? People are saying it's gonna hit £5, people are saying it's gonna hit £10, people are saying it's gonna hit £200. Comment below and let me know how much money you're in profit from today.",Identifies overconfidence as an additional strategy,1,0,0,1,0,1,1,0,
+claude-3-5-sonnet-20240620,FALSE,250,authority_bias,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The primary strategy used in this video is Authority Bias. The speaker presents themselves as an authority figure by confidently recommending a specific book, ""Girls Don't Invest,"" as the go-to resource for beginners in investing. They position the book as a comprehensive guide that solved their own investment challenges, implying expertise and experience. This recommendation coming from someone who has successfully navigated the investment world themselves lends credibility and encourages viewers to trust the advice. The speaker's personal endorsement and the way they frame the book as a solution to feeling overwhelmed and intimidated by the stock market further reinforces the authority bias, making viewers more likely to follow the recommendation.","Whenever people ask me, hey I want to start investing but I do not know where to start, this is the book I recommend to them. Girls Don't Invest is a very simple, uncomplicated, step-by-step, walk-you-through-from-start-to-finish guide on investing in the stock market. This book walks you through the key reasons to start investing, common misconceptions, and key steps to take with your personal finances before entering the stock market. And finally, nailing down your investing strategy. This book came in clutch at a time when I felt overwhelmed and intimidated by the stock market and didn't know where to start. So to anyone who's currently in that situation, this might be your key to finally becoming a girl that invests.",,0,1,0,0,1,0,1,1,
+gpt-4o-mini,TRUE,5,mix,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The video employs a mix of FOMO and Authority Bias. 
+
+FOMO is evident as the speaker urges listeners to consider investing in companies involved in AI, implying that they might miss out on a lucrative opportunity if they don't act. The mention of AI's rapid development enhances this feeling of urgency. 
+
+Authority Bias is also present, as the speaker references the expertise of those in the AI field, implying that their insights validate the investment choices being suggested (i.e., semiconductors and companies producing chips like Nvidia and Broadcom). This boosts the credibility of the recommended investments. 
+
+Overall, both strategies work together to motivate investment decisions.","It's the top three stock that I'd invest in right now. If you look at what's happening in the world, you see AI, and if you listen to people that are experts in that field, you'll realize that every six months, it's 10x-ing. In other words, you're in a situation where AI is becoming better and better. So what companies are going to gain because of AI? So I go with the people that produce the shovels. In other words, when there was a gold rush, lots of people sold their farms, sold their businesses, and off went looking for gold. Actually, you can go look for how you can use AI, or you can actually look at who's producing the shovels. In this case, it's semiconductors, people producing chips, Nvidia, of course, is one, Broadcom is another. For me, I will be investing in the companies producing the shovels. What about you? What's the best things to invest in right now, in your opinion? Leave a comment below.","Identifies mix of fomo and authority bias but not overconfidence
+
+Actual label: mix of all 3",1,1,1,1,1,0,1,0,
+gpt-4o-mini,TRUE,12,overconfidence,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The video employs a mix of FOMO and overconfidence strategies. 
+
+FOMO is evident as it implies that by not investing in the featured stocks (Broadcom, Visa, and Walmart), viewers risk missing out on potentially lucrative opportunities as the companies are expected to join the $1 trillion club. This creates a sense of urgency and fear of loss among investors.
+
+Overconfidence is present as the speaker expresses strong conviction in the potential of these stocks, portraying them as must-buys based on their insight into future growth prospects. This encourages viewers to believe that they can make beneficial investment decisions by following the speaker's recommendations.
+
+Authority bias is not explicitly present because the video does not cite any recognized experts to bolster the claims about the stocks.","Here's three stocks to buy before they're worth $1 trillion. First stock is Broadcom. There's two reasons why I really like Broadcom. First one is being the recent announcement of them launching Bellarine. This product looks absolutely insane and this is going to help increase their competition in the AI industry. Number two is the launch of their private cloud platform, which will improve AI autonomy. Second stock is Visa. The Federal Reserve said that cash transactions accounted for 16% of all transactions in 2024, so clearly the preference for digital payments is increasing. And Visa is well positioned to capitalize on this, being the leader in the industry. Third stock is Walmart. In their previous earnings report, they reported that total revenues were up 5.5% year-over-year. With advertising being one of their new revenue streams, this grew 28%. And with their e-commerce business really starting to catch fire, being the second largest behind Amazon, I expect this company to join the $1 trillion club soon. Make sure to follow for more stock market content.",States fomo as an additonal strategy used,0,0,1,1,0,1,1,0,
+gpt-4o-mini,TRUE,32,overconfidence,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The video employs a mix of FOMO and overconfidence. 
+
+FOMO is evident as the speaker emphasizes the cycles of the crypto market, urging viewers to act fast on opportunities before they get left behind and suggesting that others will capitalize on market movements while some might miss out. 
+
+Overconfidence is present in the speaker’s assertive belief that they will not let any investment opportunity slip by, implying they possess unique insights and can make successful financial decisions under pressure. 
+
+Authority bias is not distinctly utilized, as the speaker does not cite experts or figures of authority to bolster their claims.","Mastering the crypto cycle is extremely easy and this is how it works. First Bitcoin pumps, then Ethereum pumps, then all of the altcoins pump, then the midcaps pump, then the market drops and microcaps pump. And then the market goes sideways, this is where it gets boring and people start to leave the market. This is where we pay attention the most. Then you have the meme coins pump, the market bleeds, people start yelling that this is a scam and they get angry and this is when I see miserable couch potatoes in my comments, you know, talking about crypto is a scam. Then we get the final dump and then we restart. People know this and they capitalize on it every single time. I'm going to capitalize on it this time. I'm not letting anything, no midcap, no altcoin, no Bitcoin, no meme coin pass me by.",States fomo as an additonal strategy used,0,0,1,1,0,1,1,0,
+gpt-4o-mini,TRUE,83,mix,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The video utilizes FOMO, overconfidence, and authority bias. 
+
+1. **FOMO**: The speaker emphasizes urgency by stating that it's the ""last opportunity to get these altcoins at cheap prices,"" triggering the fear of missing out on a potential financial gain.
+
+2. **Overconfidence**: The speaker expresses strong beliefs in their ability to predict market movements, stating, ""anybody not understanding this... are wasting valuable time,"" which suggests a unique insight that may not be accessible to others.
+
+3. **Authority Bias**: The speaker positions themselves as an experienced investor, using phrases like ""people like me, we are buying this stuff,"" which can instill trust in their opinions based on perceived expertise.
+
+This combination encourages viewers to act quickly and confidently based on the speaker’s assertions.","This is your last opportunity to get these altcoins at these cheap-ass prices. This market is going to take off on you. It is sitting at the 3A2, just like it was the previous cycle. And I'm not talking about an individual crypto altcoin, I'm talking about all the damn altcoins. That is the whole altcoin market cap, $586 billion. That's all of them. Sitting at the 3A2, this is normal. Anybody not understanding this that don't know how to chart, they are wasting valuable, valuable time in the market. They don't know what they're doing. People like me, we are buying this stuff. We know when this takes off. It's too late to go back. It ain't coming back down to the 3A2. It's been there for freaking months.","Authority bias and overconfidence are stated as additonal strategies
+
+Actual label: mix of fomo and loss aversion",1,0,0,1,1,1,1,0,
+gpt-4o-mini,TRUE,96,fomo,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The video employs a mix of FOMO and overconfidence strategies. 
+
+FOMO is present as the speaker highlights the significant price increase of XRP (£2.08, up 36%), suggesting that people are becoming ""mega rich,"" which triggers the fear of missing out on a potential financial gain. 
+
+Overconfidence is also utilized by presenting speculative predictions that XRP could hit £5, £10, or even £200, encouraging viewers to believe in the possibility of high returns and that they can make remarkable financial choices based on this potential. 
+
+Authority bias is not evident, as there are no cited experts or authoritative figures influencing the opinion shared in the video.","XRP is trading at £2.08 today. As you can see, it's up 36% today, and up 8.6% in the last hour. People are waking up today mega rich. I mean, where can this stop? People are saying it's gonna hit £5, people are saying it's gonna hit £10, people are saying it's gonna hit £200. Comment below and let me know how much money you're in profit from today.",States overconfidence as an additonal strategy used,1,0,0,1,0,1,1,0,
+gpt-4o-mini,TRUE,250,authority_bias,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The video utilizes FOMO and overconfidence strategies. 
+
+FOMO is evident as the speaker emphasizes feeling ""overwhelmed and intimidated"" by the stock market, implying a sense of urgency for listeners to start investing before they miss out on opportunities. 
+
+Overconfidence is present in the encouraging tone that implies anyone can succeed in investing by following the steps outlined in the book. This approach instills a belief that listeners can manage their investments effectively, despite their initial doubts. 
+
+Authority bias is not explicitly referenced in the video, as the recommendation is primarily based on personal experience rather than citations of expert advice.","Whenever people ask me, hey I want to start investing but I do not know where to start, this is the book I recommend to them. Girls Don't Invest is a very simple, uncomplicated, step-by-step, walk-you-through-from-start-to-finish guide on investing in the stock market. This book walks you through the key reasons to start investing, common misconceptions, and key steps to take with your personal finances before entering the stock market. And finally, nailing down your investing strategy. This book came in clutch at a time when I felt overwhelmed and intimidated by the stock market and didn't know where to start. So to anyone who's currently in that situation, this might be your key to finally becoming a girl that invests.","Does not reference authority bias as a strategy, which is the label for this video",0,1,0,1,0,1,0,0,
+gpt-4o-mini,FALSE,5,mix,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The video employs a mix of FOMO and authority bias. 
+
+FOMO is evident when the speaker emphasizes the rapid advancements in AI, suggesting that there is an urgent opportunity being missed by not investing in related companies. The reference to AI ""10x-ing"" every six months triggers the fear of being left behind in a lucrative market.
+
+Authority bias is present as the speaker refers to experts in AI and employs an analogy of the gold rush, enhancing credibility. The mention of specific companies like Nvidia and Broadcom serves to bolster trust in the investment recommendations by implying that they are well-informed choices.
+
+Overall, the strategies work together to encourage viewers to consider action in their investment decisions.","It's the top three stock that I'd invest in right now. If you look at what's happening in the world, you see AI, and if you listen to people that are experts in that field, you'll realize that every six months, it's 10x-ing. In other words, you're in a situation where AI is becoming better and better. So what companies are going to gain because of AI? So I go with the people that produce the shovels. In other words, when there was a gold rush, lots of people sold their farms, sold their businesses, and off went looking for gold. Actually, you can go look for how you can use AI, or you can actually look at who's producing the shovels. In this case, it's semiconductors, people producing chips, Nvidia, of course, is one, Broadcom is another. For me, I will be investing in the companies producing the shovels. What about you? What's the best things to invest in right now, in your opinion? Leave a comment below.","Identifies fomo and authority bias mix
+
+Does not mention overconfidence
+
+Actual label: mix of all 3",1,1,1,1,1,0,1,0,
+gpt-4o-mini,FALSE,12,overconfidence,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The video uses a mix of FOMO and overconfidence strategies. 
+
+FOMO is evident as the speaker emphasizes that these stocks are ""to buy before they're worth $1 trillion,"" suggesting that viewers might miss out on a significant investment opportunity if they don’t act quickly. 
+
+Overconfidence is also present, particularly in the bullish statements about Broadcom, Visa, and Walmart. The speaker provides optimistic insights about their growth potential, such as Walmart's revenue increase and Visa's leadership in the digital payments sector, encouraging a belief that these stocks will perform well. 
+
+There is no indication of authority bias in the video, as the speaker does not cite any expert opinions or figures of authority to support their assertions.","Here's three stocks to buy before they're worth $1 trillion. First stock is Broadcom. There's two reasons why I really like Broadcom. First one is being the recent announcement of them launching Bellarine. This product looks absolutely insane and this is going to help increase their competition in the AI industry. Number two is the launch of their private cloud platform, which will improve AI autonomy. Second stock is Visa. The Federal Reserve said that cash transactions accounted for 16% of all transactions in 2024, so clearly the preference for digital payments is increasing. And Visa is well positioned to capitalize on this, being the leader in the industry. Third stock is Walmart. In their previous earnings report, they reported that total revenues were up 5.5% year-over-year. With advertising being one of their new revenue streams, this grew 28%. And with their e-commerce business really starting to catch fire, being the second largest behind Amazon, I expect this company to join the $1 trillion club soon. Make sure to follow for more stock market content.",States fomo as an additonal strategy used,0,0,1,1,0,1,1,0,
+gpt-4o-mini,FALSE,32,overconfidence,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The video employs a mix of FOMO and overconfidence strategies. 
+
+FOMO is evident as the speaker emphasizes the cyclical nature of the market, instilling a sense that if viewers do not act now, they may miss out on potential profits, especially as different market segments pump. 
+
+Overconfidence is present in the speaker's assertion that they will capitalize on every opportunity, suggesting an unwavering belief in their ability to succeed in trading despite market volatility. This boosts the idea that they have unique insights into the market's behavior. 
+
+Authority bias is not clearly established, as the speaker does not reference any experts or authoritative figures to back up their claims.","Mastering the crypto cycle is extremely easy and this is how it works. First Bitcoin pumps, then Ethereum pumps, then all of the altcoins pump, then the midcaps pump, then the market drops and microcaps pump. And then the market goes sideways, this is where it gets boring and people start to leave the market. This is where we pay attention the most. Then you have the meme coins pump, the market bleeds, people start yelling that this is a scam and they get angry and this is when I see miserable couch potatoes in my comments, you know, talking about crypto is a scam. Then we get the final dump and then we restart. People know this and they capitalize on it every single time. I'm going to capitalize on it this time. I'm not letting anything, no midcap, no altcoin, no Bitcoin, no meme coin pass me by.",States fomo as an additonal strategy used,0,0,1,1,0,1,1,0,
+gpt-4o-mini,FALSE,83,mix,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The video employs a mix of FOMO and overconfidence strategies. 
+
+1. **FOMO**: The speaker highlights that it is the ""last opportunity"" to buy altcoins at ""cheap-ass prices,"" creating urgency and triggering fear of missing out on a potential market surge. This encourages viewers to act quickly to avoid losing out.
+
+2. **Overconfidence**: The speaker presents themselves as knowledgeable and confident, asserting that they know when the market will take off and implying that those who don’t understand charting are wasting time. This promotes the idea that viewers can make significant profits if they buy now, leveraging the belief that they can capitalize on unique insights.
+
+Authority bias is not prominently featured as no specific experts or authoritative figures are mentioned to support the claims made.","This is your last opportunity to get these altcoins at these cheap-ass prices. This market is going to take off on you. It is sitting at the 3A2, just like it was the previous cycle. And I'm not talking about an individual crypto altcoin, I'm talking about all the damn altcoins. That is the whole altcoin market cap, $586 billion. That's all of them. Sitting at the 3A2, this is normal. Anybody not understanding this that don't know how to chart, they are wasting valuable, valuable time in the market. They don't know what they're doing. People like me, we are buying this stuff. We know when this takes off. It's too late to go back. It ain't coming back down to the 3A2. It's been there for freaking months.","Identifies fomo and overconfidence mix
+
+Actual label: mix of fomo and loss aversion",1,0,0,1,0,1,1,0,
+gpt-4o-mini,FALSE,96,fomo,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The video employs a mix of strategies: FOMO and overconfidence.
+
+FOMO is evident as it highlights the drastic increase in XRP’s price and suggests that viewers may miss out on potential profits, generating urgency to act. Phrases like ""people are waking up today mega rich"" emphasize this fear of missing an opportunity.
+
+Overconfidence is also present as the video indicates high bullish expectations for XRP, with predictions ranging from £5 to £200. This encourages viewers to feel confident that they, too, can make successful investments based on the perceived uniqueness of this opportunity.
+
+Authority bias is not utilized in this video, as it lacks references to experts or figures of authority to support the financial claims made.","XRP is trading at £2.08 today. As you can see, it's up 36% today, and up 8.6% in the last hour. People are waking up today mega rich. I mean, where can this stop? People are saying it's gonna hit £5, people are saying it's gonna hit £10, people are saying it's gonna hit £200. Comment below and let me know how much money you're in profit from today.",States overconfidence as an additonal strategy used,1,0,0,1,0,1,1,0,
+gpt-4o-mini,FALSE,250,authority_bias,"
+                Which of the following strategies is used in this video: FOMO, overconfidence, or authority bias? 
+
+                If a mix of strategies is used in the video, list them all. 
+
+                Only reference the three strategies listed above. 
+
+                Provide a short justification for your answer. 
+
+                ","The video primarily utilizes FOMO and Authority Bias strategies. 
+
+FOMO is present as the speaker highlights the intimidation and overwhelm many feel when starting to invest, suggesting that others might succeed and leave newcomers behind if they don’t take action. This creates a sense of urgency to begin investing.
+
+Authority Bias is invoked through the recommendation of the book ""Girls Don't Invest,"" which positions the book as an expert guide that can help potential investors navigate the stock market, thereby enhancing trust in the investment process.
+
+Overall, while there is an element of encouraging confidence in investing, it is less about overconfidence and more about providing guidance and alleviating uncertainty through mentioned resources.","Whenever people ask me, hey I want to start investing but I do not know where to start, this is the book I recommend to them. Girls Don't Invest is a very simple, uncomplicated, step-by-step, walk-you-through-from-start-to-finish guide on investing in the stock market. This book walks you through the key reasons to start investing, common misconceptions, and key steps to take with your personal finances before entering the stock market. And finally, nailing down your investing strategy. This book came in clutch at a time when I felt overwhelmed and intimidated by the stock market and didn't know where to start. So to anyone who's currently in that situation, this might be your key to finally becoming a girl that invests.",States fomo as an additonal strategy used,0,1,0,1,1,0,1,0,

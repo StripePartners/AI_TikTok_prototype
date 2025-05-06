@@ -122,7 +122,7 @@ def get_prompt_consistency_eval(retrieved_letters, behavioural_science_docs, cur
         You also know that users have watched the following video and this is the video transcript: \n{current_v_transcript}\n\n
         You will follow the principles mentioned in the behavioral science books and articles: \n{behavioural_science_docs}\n\n
         Please answer the user's question concisely, in no more than 150 words. \n
-        Based on this information, answer the user's question. \n
+        Using all this information, answer the user's question and make sure to include reasoning from the retrieved documents and behavioural science books.\n
         """
 
     system_prompt = common_prompt + mix_prompt
@@ -138,3 +138,32 @@ def get_prompt_consistency_eval_no_kb(current_v_transcript):
 
     system_prompt = common_prompt + mix_prompt
     return system_prompt
+
+def get_prompt_eval_strategy(retrieved_letters, behavioural_science, current_v_transcript):
+    # define prompt for evaluation of strategy
+    prompt = f"""
+        You are an investment assistant with access to the following retrieved documents:\n{retrieved_letters}\n\n
+        You also know that users have watched the following video and this is the video transcript: \n{current_v_transcript}\n\n
+        You will follow the principles mentioned in the behavioral science books and articles: \n{behavioural_science}\n\n
+        You are aware of the following behavioural strategies which are typically used to promote certain financial decisions: \n
+        - FOMO (Fear of Missing Out): triggering the fear that others are seizing an opportunity you might miss.\n
+        - Overconfidence: encouraging individuals to believe they can make great financial decisions under pressure or capitalize on “unique” insights (e.g. using bullish statements, rankings, or boosting language. \n
+        - Authority Bias: citing experts or figures of authority can make people trust the decision.\n
+        Based on this information, answer the user's question concisely, in no more than 150 words. \n
+        """
+
+    return prompt
+
+def get_prompt_eval_strategy_no_kb(current_v_transcript):
+    # define prompt for evaluation of strategy without knowledge base
+    prompt = f"""
+        You are an investment assistant.\n\n
+        You know that users have watched the following video and this is the video transcript: \n{current_v_transcript}\n\n
+        You are aware of the following behavioural strategies which are typically used to promote certain financial decisions: \n
+        - FOMO (Fear of Missing Out): triggering the fear that others are seizing an opportunity you might miss.\n
+        - Overconfidence: encouraging individuals to believe they can make great financial decisions under pressure or capitalize on “unique” insights (e.g. using bullish statements, rankings, or boosting language. \n
+        - Authority Bias: citing experts or figures of authority can make people trust the decision.\n
+        Based on this information, answer the user's question concisely, in no more than 150 words. \n
+        """
+
+    return prompt
