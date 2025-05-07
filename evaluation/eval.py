@@ -126,7 +126,7 @@ def calculate_pairwise_jaccard_similarities(responses: List[str]) -> float:
             set1 = set(responses[i].lower().split())
             set2 = set(responses[j].lower().split())
             jaccard_sim = 1 - _calculate_jaccard_distance(set1, set2)
-            jaccard_similarities.append(1 - jaccard_sim)
+            jaccard_similarities.append(jaccard_sim)
     print(f"Jaccard Similarities: {jaccard_similarities}")
     return np.mean(jaccard_similarities)
 
@@ -197,7 +197,6 @@ def evaluate_consistency_2(file_path):
     df = pd.read_excel(file_path, skiprows=1)
     model_types = df['model'].unique()
     include_context_list = df['kb_included'].unique()
-    video_indices = df['video_index'].unique()
     results = []
     for model_type in model_types:
         for include_context in include_context_list:
@@ -216,6 +215,76 @@ def evaluate_consistency_2(file_path):
 
     results_df = pd.DataFrame(results)
     results_df.to_csv("consistency_eval_similarities_2.csv", index=False)
+    return results_df
+
+# Check similarities across responses for each model - approach 3
+def evaluate_consistency_3(file_path):
+    df = pd.read_excel(file_path, skiprows=1)
+    model_types = df['model'].unique()
+    include_context_list = df['kb_included'].unique()
+    video_indices = df['video_index'].unique()
+    # model_types = ['gpt-4o-mini'] # for testing
+    # include_context_list = [True] # for testingß
+    results = []
+    for model_type in model_types:
+        for include_context in include_context_list:
+                # Get all responses for this model and context
+                filtered_df = df[(df['model'] == model_type) & (df['kb_included'] == include_context)]
+                print(filtered_df.head())
+                responses_by_video = {}
+                for video_index in video_indices:
+                    responses = filtered_df[filtered_df['video_index'] == video_index]['response'].tolist()
+                    print(len(responses)) # should be 5
+                    responses_by_video[video_index] = responses
+
+                if len(responses_by_video) == 6:  # Ensure there are 6 videos
+                    all_responses = [resp for responses in responses_by_video.values() for resp in responses]
+                    all_embeddings = model.encode(all_responses, convert_to_tensor=True, device=device)
+                    all_token_sets = [set(resp.lower().split()) for resp in all_responses]
+                    avg_cosine_similarities = []
+                    avg_jaccard_similarities = []
+                    for i, (video_index, responses) in enumerate(responses_by_video.items()):
+                        cosine_sims = []
+                        jaccard_sims = []
+                        for j in range(5):
+                            current_idx = i * 5 + j
+                            # Indices of other responses (not from the same video)
+                            other_indices = [k for k in range(len(all_responses)) if k // 5 != i]
+                            print(f'Current: {current_idx}, other: {other_indices}')
+                            
+                            other_embeddings = all_embeddings[other_indices]
+                            current_embedding = all_embeddings[current_idx]
+                            sims = util.cos_sim(current_embedding, other_embeddings)[0].cpu().numpy()
+                            print(sims)
+                            avg_sim_to_others = np.mean(sims) # average similarity to other responses
+                            cosine_sims.append(avg_sim_to_others) # append the average similarity for each of 5 iterations
+
+                            current_tokens = all_token_sets[current_idx]
+                            other_token_sets = [all_token_sets[k] for k in other_indices]
+                            jaccard_scores = [
+                                1 - _calculate_jaccard_distance(current_tokens, other_tokens)
+                                for other_tokens in other_token_sets
+                            ]
+                            print(jaccard_scores)
+                            jaccard_sims.append(np.mean(jaccard_scores))
+
+                        avg_cosine_similarities.append(np.mean(cosine_sims)) # average similarity for this video (across 5 iterations)
+                        avg_jaccard_similarities.append(np.mean(jaccard_sims))
+
+                    print(avg_cosine_similarities)
+                    print(avg_jaccard_similarities)
+                    final_avg_cosine = np.mean(avg_cosine_similarities)
+                    final_avg_jaccard = np.mean(avg_jaccard_similarities)
+                    print(f"Model: {model_type}, Context: {include_context}, Avg Cross-Video Cosine Similarity: {final_avg_cosine:.4f}")
+                    results.append({
+                        'model': model_type,
+                        'kb_included': include_context,
+                        'avg_cross_video_cosine_similarity': final_avg_cosine,
+                        'avg_cross_video_jaccard_similarity': final_avg_jaccard
+                    })
+
+    results_df = pd.DataFrame(results)
+    results_df.to_csv("consistency_eval_similarities_3.csv", index=False)
     return results_df
 
 # Check accuracy of strategy identification
@@ -279,9 +348,12 @@ print(f"Using device: {device}")
 model = model.to(device)
 
 # results_df = evaluate_factual_probe_results('factual_probe_results/gpt_4o_scores.csv')
+
 # results_df = evaluate_consistency_1('consistency_eval_results.xlsx')
-# results_df = evaluate_consistency_2('consistency_eval_results.xlsx')
-results_df = calculate_strategy_accuracy('strategy_eval_results.csv')
+results_df = evaluate_consistency_2('consistency_eval_results.xlsx')
+# results_df = evaluate_consistency_3('consistency_eval_results.xlsx')
+
+# results_df = calculate_strategy_accuracy('strategy_eval_results.csv')
 
 print(results_df.head())
 
