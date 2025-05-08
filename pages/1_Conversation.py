@@ -87,15 +87,33 @@ def model_res_generator(system_prompt):
     # for chunk in stream:
     #     yield chunk["message"]["content"]
 
+    max_retries = 3
+    retry_delay = 2  # seconds
+
     client = anthropic.Client(api_key=os.getenv("ANTHROPIC_API_KEY"))
-    with client.messages.stream(
-        model=st.session_state["model"],
-        system=system_prompt,
-        messages=messages,
-        max_tokens=400
-        ) as stream:
-        for text in stream.text_stream:
-            yield text
+
+    for attempt in range(max_retries):
+        try:
+            with client.messages.stream(
+                model=st.session_state["model"],
+                system=system_prompt,
+                messages=messages,
+                max_tokens=400
+                ) as stream:
+                for text in stream.text_stream:
+                    yield text
+            break
+        except Exception as e:
+            if "overloaded" in str(e):
+                st.error(f"Anthropic API is overloaded. Retrying... ({attempt + 1}/{max_retries})")
+                time.sleep(retry_delay)
+                
+            else:
+                st.error(f"An unexpected error occurred: {e}.")
+                break
+    else:
+        st.error("Failed to connect to Anthropic API a response after multiple attempts. Please try again later.")
+        yield "Error: Unable to get a response from the model."
 
 ##### app functions #####
 asset_path = './assets/'
