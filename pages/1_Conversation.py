@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import ast
 import ollama
+import anthropic
 import os
 import sys
 import pickle
@@ -24,7 +25,7 @@ def chatbot(start_msg):
         st.session_state["messages"] = []
 
     if "model" not in st.session_state:
-        st.session_state["model"] = "llama3:8b" # Sets a default model if one hasn’t been chosen
+        st.session_state["model"] = "claude-3-5-sonnet-20240620" # Sets a default model if one hasn’t been chosen
 
     for message in st.session_state["messages"]: # Re-displaying the chat history
         with st.chat_message(message["role"]):
@@ -62,7 +63,8 @@ def model_res_generator(system_prompt):
     # messages = [{"role": "system", "content": context}] + st.session_state["messages"]
     
     # Start with the system message
-    messages = [{"role": "system", "content": system_prompt}]
+    # messages = [{"role": "system", "content": system_prompt}]
+    messages = []
     
     # Append user-assistant history ONLY
     for msg in st.session_state["messages"]:
@@ -73,17 +75,27 @@ def model_res_generator(system_prompt):
     print("\n--- MESSAGES SENT TO MODEL ---")
     print(json.dumps(messages, indent=2))  # Pretty print for easier reading
 
-    # Connects to ollama (local LLM runner), with the full message chain
-    stream = ollama.chat(
+    # # Connects to ollama (local LLM runner), with the full message chain
+    # stream = ollama.chat(
+    #     model=st.session_state["model"],
+    #     messages=messages,
+    #     stream=True
+    #     # options={"num_predict": 150} # Set maximum number of tokens to predict
+    # )
+
+    # # Streams response text chunk by chunk
+    # for chunk in stream:
+    #     yield chunk["message"]["content"]
+
+    client = anthropic.Client(api_key=os.getenv("ANTHROPIC_API_KEY"))
+    with client.messages.stream(
         model=st.session_state["model"],
+        system=system_prompt,
         messages=messages,
-        stream=True
-        # options={"num_predict": 150} # Set maximum number of tokens to predict
-    )
-    
-    # Streams response text chunk by chunk
-    for chunk in stream:
-        yield chunk["message"]["content"]
+        max_tokens=400
+        ) as stream:
+        for text in stream.text_stream:
+            yield text
 
 ##### app functions #####
 asset_path = './assets/'

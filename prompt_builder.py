@@ -79,7 +79,7 @@ def get_prompt(retrieved_letters, behavioural_science_docs, current_v_transcript
         You also know that users have watched the following video and this is the video transcript: \n{current_v_transcript}\n\n
         You will follow the principles mentioned in the behavioral science books and articles: \n{behavioural_science_docs}\n\n
         Please answer the user's question concisely, in no more than 150 words. \n
-        Based on this information, answer the user's question. \n
+        Using all this information, answer the user's question and make sure to include reasoning from the retrieved documents and behavioural science books.\n
         """
 
     if video_in_app_type == 'fomo':

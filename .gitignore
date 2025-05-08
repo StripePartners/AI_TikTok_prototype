@@ -5,10 +5,10 @@ __pycache__/
 #ignore env
 env/
 #ignoring everything in the video_data folder
-assets/video_data/*
+# assets/video_data/* 
 #ignoring everything in the letters folder
 assets/letters/*
 #ignoring everything in the vector_dbs folder
-vector_dbs/*
+# vector_dbs/*
 #ignoring everything in the books folder
 assets/books/*
