@@ -1,0 +1,18 @@
+#ignore pycache files
+__pycache__/
+#ignore pyc files
+*.pyc
+#ignore env
+env/
+#ignoring everything in the video_data folder
+# assets/video_data/* 
+#ignoring everything in the letters folder
+assets/letters/*
+#ignoring everything in the vector_dbs folder
+# vector_dbs/*
+#ignoring everything in the books folder
+assets/books/*
+#ignoring everything in the s2v folder
+s2v_old/*
+#ignore
+s2v_reddit_2015_md.tar.gz

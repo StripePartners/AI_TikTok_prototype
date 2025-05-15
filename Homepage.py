@@ -2,145 +2,231 @@ import streamlit as st
 import pandas as pd
 import ast
 import ollama
+import anthropic
 import os
 import sys
+import pickle
+import json
+from langchain.vectorstores import FAISS
+from langchain.embeddings import HuggingFaceEmbeddings
 
 from openai import OpenAI
 from nltk import sent_tokenize
+import time
 
+# Add root directory (where AI_TIKTOK_prototype lives) to path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from prompt_builder import get_prompt, get_prompt_consistency_eval
+from retriever import retrieve_context
 
-def theme_analysis(video_index):
+##### Define chatbot function #####
+def chatbot(start_msg):
     
-    video_index = video_index-1
     
-    # Pre-identified extracts falling under each theme
-    authority_transcript_extracts = ast.literal_eval(df["transcript_authority_bias_extracts"][video_index])
-    authority_caption_extracts = ast.literal_eval(df["ocr_authority_bias_extracts"][video_index])
+    if "messages" not in st.session_state: #  Initializes message history.
+        st.session_state["messages"] = []
 
-    fomo_transcript_extracts = ast.literal_eval(df["transcript_fomo_extracts"][video_index])
-    fomo_caption_extracts = ast.literal_eval(df["ocr_fomo_extracts"][video_index])
+    if "model" not in st.session_state:
+        st.session_state["model"] = "claude-3-5-sonnet-20240620" # Sets a default model if one hasn’t been chosen
 
-    confidence_transcript_extracts = ast.literal_eval(df["transcript_confidence_boosting_extracts"][video_index])
-    confidence_caption_extracts = ast.literal_eval(df["ocr_confidence_boosting_extracts"][video_index])
+    # Add LLM-generated start message
+    current_v_transcript = st.session_state.get("user_select_video", {}).get("transcript", "No transcript available.")
+    bullet_points = 3
+    start_prompt = f"Based on the transcript {current_v_transcript}, outline {bullet_points} interesting specific questions relevant to information in the transcript that could start a conversation on financial advice. Provide the questions in bullet format beginning with 'Hello! Nice to meet you! You could ask me things like:'"
+
+    model_response = model_res_non_generator(start_prompt)
+    #st.write(model_response.content[0].text)
+
+    message = st.chat_message("assistant")
+    message.write(model_response.content[0].text)
+    #print(model_res_non_generator(start_prompt))
     
-    loss_transcript_extracts = ast.literal_eval(df["transcript_loss_aversion_extracts"][video_index])
-    loss_caption_extracts = ast.literal_eval(df["ocr_loss_aversion_extracts"][video_index])
+    #message.write(model_res_non_generator(start_prompt))
+    #st.session_state["messages"].append({"role": "assistant", "content": message}) # "assistant": model response
+    
+    for message in st.session_state["messages"]: # Re-displaying the chat history
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
 
-    # Print coded transcript
-    transcript = df["transcript"][video_index]
+    '''if prompt := st.chat_input(start_msg): # Waits for new user input
+        st.session_state["messages"].append({"role": "user", "content": prompt}) # Adds the user message to history
 
-    coded_transcript = ""
-    for sentence in sent_tokenize(transcript):
-        sentence = highlight_function(sentence, authority_transcript_extracts, color1)
-        sentence = highlight_function(sentence, confidence_transcript_extracts, color3)
-        sentence = highlight_function(sentence, loss_transcript_extracts, color4)
-        sentence = highlight_function(sentence, fomo_transcript_extracts, color2)
+        # Grabs the selected video transcript and its categorized behavior type
+        current_v_transcript = st.session_state.get("user_select_video", {}).get("transcript", "No transcript available.")
+        current_v_type = st.session_state.get("user_select_video", {}).get("video_type_in_app", "unknown")
 
-        coded_transcript += sentence
+        # Gets relevant info from both letters and behavioral science books
+        retrieved_letters, docs_letter = retrieve_context(prompt, document_type='letters')
+        behavioural_science_docs, docs_books = retrieve_context(prompt, document_type='books')
+        
+        # create system prompt based on video type
+        # This is your initial context for the model — a custom “system prompt”
+        system_prompt = get_prompt_consistency_eval(retrieved_letters, behavioural_science_docs, current_v_transcript)
+        st.session_state["system_prompt"] = system_prompt
 
-    st.markdown("*Transcript of video*")
-    st.markdown(coded_transcript,unsafe_allow_html=True)
+        with st.chat_message("user"): # Renders user input immediately
+            st.markdown(prompt)
+        
+        with st.chat_message("assistant"): # Streams and displays the assistant's response, then stores it in chat history
+            message = st.write_stream(model_res_generator(system_prompt))
+            st.session_state["messages"].append({"role": "assistant", "content": message}) # "assistant": model response'''
 
-    # Print coded ocr captions
-    ocr_captions = ast.literal_eval(df["OCR_captions"][video_index])
 
-    coded_captions = []
-    for caption in ocr_captions:
-        caption = highlight_function(caption, authority_caption_extracts, color1)
-        caption = highlight_function(caption, fomo_caption_extracts, color2)
-        caption = highlight_function(caption, confidence_caption_extracts, color3)
-        caption = highlight_function(caption, loss_caption_extracts, color4)
 
-        coded_captions.append(caption)
 
-    st.markdown("*OCR Captions at start of video*")
-    st.markdown(', '.join(coded_captions),unsafe_allow_html=True)
 
-def highlight_function(
-                        extract, # the text extract to check if it belongs to subset of extracts
-                        selected_extracts, # the subset of extracts predetermined to belong to one theme
-                        color # the color of the theme
-                        ):
+##### Function to generate non-stream model response #####
+def model_res_non_generator(start_prompt):
+    client = anthropic.Anthropic(api_key="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")#os.getenv("ANTHROPIC_API_KEY"))
 
-    if extract.lower() in selected_extracts or extract in selected_extracts:
-        return f''' <span style ="background-color:{color}"> {extract} </span> '''
+    text = client.messages.create(
+                                    model=st.session_state["model"],
+                                    max_tokens=400,
+                                    messages=[{"role":"user","content":start_prompt}],
+                                    ) 
+    return text
+    
+
+
+
+
+
+
+##### Function to generate model response #####
+def model_res_generator(system_prompt):
+    # This is crucial. It constructs the full message chain to send to the model:
+    # Starts with the system prompt (sets context, persona, and rules)
+    # Then adds the entire user-assistant conversation so far
+    # The system prompt only appears once, at the top of the message list
+    # messages = [{"role": "system", "content": context}] + st.session_state["messages"]
+    
+    # Start with the system message
+    # messages = [{"role": "system", "content": system_prompt}]
+    messages = []
+    
+    # Append user-assistant history ONLY
+    for msg in st.session_state["messages"]:
+        if msg["role"] in ["user", "assistant"]:
+            messages.append(msg)
+
+    # DEBUG: Print full message chain
+    print("\n--- MESSAGES SENT TO MODEL ---")
+    print(json.dumps(messages, indent=2))  # Pretty print for easier reading
+
+    # # Connects to ollama (local LLM runner), with the full message chain
+    # stream = ollama.chat(
+    #     model=st.session_state["model"],
+    #     messages=messages,
+    #     stream=True
+    #     # options={"num_predict": 150} # Set maximum number of tokens to predict
+    # )
+
+    # # Streams response text chunk by chunk
+    # for chunk in stream:
+    #     yield chunk["message"]["content"]
+
+    max_retries = 3
+    retry_delay = 2  # seconds
+
+    client = anthropic.Client(api_key="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")#os.getenv("ANTHROPIC_API_KEY"))
+
+    for attempt in range(max_retries):
+        try:
+            with client.messages.stream(
+                model=st.session_state["model"],
+                system=system_prompt,
+                messages=messages,
+                max_tokens=400
+                ) as stream:
+                for text in stream.text_stream:
+                    yield text
+            break
+        except Exception as e:
+            if "overloaded" in str(e):
+                st.error(f"Anthropic API is overloaded. Retrying... ({attempt + 1}/{max_retries})")
+                time.sleep(retry_delay)
+                
+            else:
+                st.error(f"An unexpected error occurred: {e}.")
+                break
     else:
-        return extract
+        st.error("Failed to connect to Anthropic API a response after multiple attempts. Please try again later.")
+        yield "Error: Unable to get a response from the model."
 
 
+# callback to get to the next video (imitate generator functionality)
+def callback(indexes_to_analyse):
+    if st.session_state["order"] < len(indexes_to_analyse) - 1: 
+        st.session_state["order"] += 1
+        
+        i = indexes_to_analyse[st.session_state['order']]
+        st.session_state["user_select_video"] = {"index":i,
+                                            "transcript":df[df['Index'] == i]["transcript"].iloc[0],
+                                            "ocr_captions":ast.literal_eval(df[df['Index'] == i]["OCR_captions"].iloc[0]),
+                                            "video_type_in_app": df[df['Index'] == i]["video_type_in_app"].iloc[0]} #or whatever default
+        st.session_state["messages"] = []  # Reset chatbot history
+    else:
+        st.write("Reached limit on videos to analyse.")
 
-# Set up custom SP colours
-color1 = '#FB5200' #tangerine
-color2 = '#FFB7DE' #flamingo
-color3 = '#8886FF' #violet
-color4 = '#00DB90' #matcha
-color5 = '#007B94' #teal
-color6 = '#FFC736' #sunflower
 
-
-
-
-
-
-#st.set_page_config(page_title="👴💵📖 Grandpa Warren", layout="wide")
-warren_logo_path = "Finance_TikTok_prototype/ai_tiktok_prototype-main/V2 young warren logo.png"
-st.set_page_config(page_title="Young Warren",page_icon=warren_logo_path)
+##### app functions #####
+asset_path = './assets/'
+warren_logo_path = asset_path + "V2 young warren logo.png"
+st.set_page_config(page_title="Warren.ai",page_icon=warren_logo_path)
 st.image(warren_logo_path,width = 100)
 st.title("pov: ur tired of fake finance bros")
-st.write("young warren is ready to be in your corner")
+st.write("Warren.ai is ready to be in your corner")
 
-df = pd.read_csv("https://docs.google.com/spreadsheets/d/1naC0k4dQUOXXWEmSdLR3EVbyr8mBUYZ2KwZziwSleUA/export?gid=126339389&format=csv")
-
-#st.dataframe(df)
-#st.scatter_chart(df,x = "Index",y="View Count",color ="Investment Category")
+short_col, long_col = st.columns([0.33,0.67])
+alarm = 0 # check if a video was chosen yet
 
 
-# Present a selection of videos to choose from for further analysis
-investment_categories = set(list(df["Investment Category"]))
-investment_categories = list(investment_categories)
-lc_investment_categories = [x.lower() for x in investment_categories]
-#st.write("bestie, what are we investing in today?")
-selected_category = st.selectbox("bestie, what are we investing in today?",lc_investment_categories)
-selected_category = investment_categories[lc_investment_categories.index(selected_category)]
+# Read dataset
+df = pd.read_csv("https://docs.google.com/spreadsheets/d/1naC0k4dQUOXXWEmSdLR3EVbyr8mBUYZ2KwZziwSleUA/export?gid=1702026903&format=csv") # small sample of videos
+indexes_to_analyse = list(df["Index"]) #(i for i in list(df["Index"]))
 
-videos_to_analyse = list(df["Video Title"][df["Investment Category"]==selected_category].head(3))
-indexes_to_analyse = list(df["Index"][df["Investment Category"]==selected_category].head(3))
-
-if 'user_select_video' not in st.session_state:
-    st.session_state['user_select_video'] = {"index":0,"transcript":df["transcript"][0],"ocr_captions":ast.literal_eval(df["OCR_captions"][0])} #or whatever default
-user_select_video = st.session_state['user_select_video']
-
-
-
-col1, col2, col3 = st.columns(3, gap = "small")
-
-with col1:
-    #st.caption(videos_to_analyse[0])
-    st.video(os.path.join("Finance_TikTok_prototype/corpus/videos","video"+str(indexes_to_analyse[0]) + ".mp4"))
-    var_click1 = st.button("vibe check this one",type="primary",key = "button1",use_container_width=True)
-
-    if var_click1 == True:
-        st.session_state['user_select_video'] = {"index":indexes_to_analyse[0],"transcript":df["transcript"][indexes_to_analyse[0]],"ocr_captions":ast.literal_eval(df["OCR_captions"][indexes_to_analyse[0]])} #or whatever default
-        st.switch_page("pages/1_Conversation.py")
-
-with col2:
-    #st.caption(videos_to_analyse[1])
-    st.video(os.path.join("Finance_TikTok_prototype/corpus/videos","video"+str(indexes_to_analyse[1]) + ".mp4"))
-    var_click2 = st.button("vibe check this one", type="primary",key = "button2",use_container_width=True)
-
-    if var_click2 == True:
-        st.session_state['user_select_video'] = {"index":indexes_to_analyse[1],"transcript":df["transcript"][indexes_to_analyse[1]],"ocr_captions":ast.literal_eval(df["OCR_captions"][indexes_to_analyse[1]])} #or whatever default
-        st.switch_page("pages/1_Conversation.py")
+#Empty dictionary
+if "order" not in st.session_state:
+    st.session_state["order"] = 0
+if "user_select_video" not in st.session_state:
+    i = indexes_to_analyse[st.session_state['order']]
+    st.session_state["user_select_video"] = {"index":i,
+                                        "transcript":df[df['Index'] == i]["transcript"].iloc[0],
+                                        "ocr_captions":ast.literal_eval(df[df['Index'] == i]["OCR_captions"].iloc[0]),
+                                        "video_type_in_app": df[df['Index'] == i]["video_type_in_app"].iloc[0]} #or whatever default
+if "messages" not in st.session_state:      
+    st.session_state["messages"] = []  # Reset chatbot history
 
 
-with col3:
-    #st.caption(videos_to_analyse[2])
-    st.video(os.path.join("Finance_TikTok_prototype/corpus/videos","video"+str(indexes_to_analyse[2]) + ".mp4"))
-    var_click3 = st.button("vibe check this one", type="primary",key = "button3",use_container_width=True)
+with short_col:
+    
+    try:
+        st.subheader("Step 1: Watch this")
+        st.video(os.path.join("assets/video_data/videos","video"+str(st.session_state["user_select_video"]["index"]) + ".mp4"))
+        
+        # Retrieve and display the transcript
+        # transcript = st.session_state["user_select_video"].get("transcript", "No transcript available.")
+        # st.subheader("Transcript")
+        # st.text_area("Video Transcript", transcript, height=200)
+        # alarm = 1
 
-    if var_click3 == True:
-        st.session_state['user_select_video'] = {"index":indexes_to_analyse[2],"transcript":df["transcript"][indexes_to_analyse[2]],"ocr_captions":ast.literal_eval(df["OCR_captions"][indexes_to_analyse[2]])} #or whatever default
-        st.switch_page("pages/1_Conversation.py")
+        # print(st.session_state["user_select_video"].get("video_type_in_app", "unknown"))
+
+    except:
+        st.write("You need to pick a video to analyse first.")
+
+
+with long_col:
+    st.subheader("Step 2: Talk it out")
+    with st.container(height = 435, border = None):  #manually set # of pixels for height of container
+        if alarm == 1:
+            chatbot("Type to chat")
+        else:
+            chatbot("Type to chat")
+    
+
+# Choose a video to show next
+var_click1 = st.button("show me another one",type="secondary",key = "button1",use_container_width=True,on_click = callback, args = [indexes_to_analyse])
 
 
 # I believe this goes in the file where all the functionality is configured, at the end
@@ -152,4 +238,3 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-        

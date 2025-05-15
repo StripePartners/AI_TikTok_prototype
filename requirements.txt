@@ -1,0 +1,15 @@
+langchain==0.3.24
+langchain_community==0.3.22
+nltk==3.9.1
+ollama==0.4.8
+openai==1.76.0
+pandas==2.2.3
+streamlit==1.44.1
+pypdf==5.4.0
+tiktoken==0.9.0
+sentence-transformers==4.1.0
+numpy==1.26.4
+faiss-cpu==1.11.0
+openpyxl==3.1.5
+xlsxwriter==3.2.3
+anthropic==0.51.0
