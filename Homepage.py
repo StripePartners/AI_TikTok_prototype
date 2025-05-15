@@ -128,7 +128,7 @@ def model_res_generator(system_prompt):
     max_retries = 3
     retry_delay = 2  # seconds
 
-    client = anthropic.Client(api_key="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")#os.getenv("ANTHROPIC_API_KEY"))
+    client = anthropic.Client(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
     for attempt in range(max_retries):
         try:
