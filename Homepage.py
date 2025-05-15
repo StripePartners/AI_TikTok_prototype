@@ -77,7 +77,7 @@ def chatbot(start_msg):
 
 ##### Function to generate non-stream model response #####
 def model_res_non_generator(start_prompt):
-    client = anthropic.Anthropic(api_key="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")#os.getenv("ANTHROPIC_API_KEY"))
+    client = anthropic.Anthropic(api_key = os.getenv("ANTHROPIC_API_KEY"))
 
     text = client.messages.create(
                                     model=st.session_state["model"],
