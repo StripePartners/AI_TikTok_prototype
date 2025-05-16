@@ -84,6 +84,7 @@ st.set_page_config(page_title="Young Warren",page_icon=warren_logo_path)
 st.image(warren_logo_path,width = 100)
 st.title("pov: ur tired of fake finance bros")
 st.write("young warren is ready to be in your corner")
+st.write("choose your bro")
 
 # df = pd.read_csv("https://docs.google.com/spreadsheets/d/1naC0k4dQUOXXWEmSdLR3EVbyr8mBUYZ2KwZziwSleUA/export?gid=126339389&format=csv") # the whole sample
 df = pd.read_csv("https://docs.google.com/spreadsheets/d/1naC0k4dQUOXXWEmSdLR3EVbyr8mBUYZ2KwZziwSleUA/export?gid=1702026903&format=csv") # small sample of videos
@@ -96,60 +97,33 @@ df = pd.read_csv("https://docs.google.com/spreadsheets/d/1naC0k4dQUOXXWEmSdLR3EV
 investment_categories = set(list(df["Investment Category"]))
 investment_categories = list(investment_categories)
 lc_investment_categories = [x.lower() for x in investment_categories]
-#st.write("bestie, what are we investing in today?")
-selected_category = st.selectbox("bestie, what are we investing in today?",lc_investment_categories)
-selected_category = investment_categories[lc_investment_categories.index(selected_category)]
-
-videos_to_analyse = list(df["Video Title"][df["Investment Category"]==selected_category].head(3))
-indexes_to_analyse = list(df["Index"][df["Investment Category"]==selected_category].head(3))
+indexes_to_analyse = list(df["Index"])
 
 if 'user_select_video' not in st.session_state:
     st.session_state['user_select_video'] = {"index":0, "transcript":df["transcript"][0], "ocr_captions":ast.literal_eval(df["OCR_captions"][0])} #or whatever default
 user_select_video = st.session_state['user_select_video']
 
-
-col1, col2, col3 = st.columns(3, gap = "small")
+columns = st.columns(3, gap="small")
 video_data_path = "assets/video_data/videos"
-with col1:
-    #st.caption(videos_to_analyse[0])
-    st.video(os.path.join(video_data_path,"video"+str(indexes_to_analyse[0]) + ".mp4"))
-    var_click1 = st.button("vibe check this one",type="primary",key = "button1",use_container_width=True)
 
-    if var_click1:
-        st.session_state['user_select_video'] = {"index":indexes_to_analyse[0],
-                                                 "transcript":df[df['Index'] == indexes_to_analyse[0]]["transcript"].iloc[0],
-                                                 "ocr_captions":ast.literal_eval(df[df['Index'] == indexes_to_analyse[0]]["OCR_captions"].iloc[0]),
-                                                 "video_type_in_app": df[df['Index'] == indexes_to_analyse[0]]["video_type_in_app"].iloc[0]} #or whatever default
-        st.session_state["messages"] = []  # Reset chatbot history
-        st.switch_page("pages/1_Conversation.py")
-
-with col2:
-    #st.caption(videos_to_analyse[1])
-    st.video(os.path.join(video_data_path,"video"+str(indexes_to_analyse[1]) + ".mp4"))
-    var_click2 = st.button("vibe check this one", type="primary",key = "button2",use_container_width=True)
-
-    if var_click2:
-        st.session_state['user_select_video'] = {"index":indexes_to_analyse[1],
-                                                 "transcript":df[df['Index'] == indexes_to_analyse[1]]["transcript"].iloc[0],
-                                                 "ocr_captions":ast.literal_eval(df[df['Index'] == indexes_to_analyse[1]]["OCR_captions"].iloc[0]),
-                                                 "video_type_in_app": df[df['Index'] == indexes_to_analyse[1]]["video_type_in_app"].iloc[0]} #or whatever default
-        st.session_state["messages"] = []  # Reset chatbot history
-        st.switch_page("pages/1_Conversation.py")
-
-
-with col3:
-    #st.caption(videos_to_analyse[2])
-    st.video(os.path.join(video_data_path,"video"+str(indexes_to_analyse[2]) + ".mp4"))
-    var_click3 = st.button("vibe check this one", type="primary",key = "button3",use_container_width=True)
-
-    if var_click3:
-        st.session_state['user_select_video'] = {"index":indexes_to_analyse[2],
-                                                 "transcript":df[df['Index'] == indexes_to_analyse[2]]["transcript"].iloc[0],
-                                                 "ocr_captions":ast.literal_eval(df[df['Index'] == indexes_to_analyse[2]]["OCR_captions"].iloc[0]),
-                                                 "video_type_in_app": df[df['Index'] == indexes_to_analyse[2]]["video_type_in_app"].iloc[0]} #or whatever default
-        st.session_state["messages"] = []  # Reset chatbot history
-        st.switch_page("pages/1_Conversation.py")
-
+for i, video_index in enumerate(indexes_to_analyse):
+    col = columns[i % 3]
+    with col:
+        st.video(os.path.join(video_data_path, f"video{video_index}.mp4"))
+        button_key = f"button{video_index}"
+        username = df[df['Index'] == video_index]["username"].iloc[0]
+        tiktok_url = f"https://www.tiktok.com/@{username}"
+        st.markdown(f"[**@{username}**]({tiktok_url})", unsafe_allow_html=True)
+        if st.button(f"chat to young warren", type="primary", key=button_key, use_container_width=True):
+            st.session_state['user_select_video'] = {
+                "index": video_index,
+                "transcript": df[df['Index'] == video_index]["transcript"].iloc[0],
+                "ocr_captions": ast.literal_eval(df[df['Index'] == video_index]["OCR_captions"].iloc[0]),
+                "video_type_in_app": df[df['Index'] == video_index]["video_type_in_app"].iloc[0],
+                "username": df[df['Index'] == video_index]["username"].iloc[0]
+            }
+            st.session_state["messages"] = []  # Reset chatbot history
+            st.switch_page("pages/1_Conversation.py")
 
 # I believe this goes in the file where all the functionality is configured, at the end
 st.markdown("""

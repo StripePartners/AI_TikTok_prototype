@@ -9,7 +9,7 @@ import pickle
 import json
 from langchain.vectorstores import FAISS
 from langchain.embeddings import HuggingFaceEmbeddings
-
+from streamlit_float import float_parent, float_init, float_css_helper
 from openai import OpenAI
 from nltk import sent_tokenize
 import time
@@ -18,41 +18,49 @@ import time
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from prompt_builder import get_prompt
 from retriever import retrieve_context
+asset_path = './assets/'
+warren_logo_path = asset_path + "V2 young warren logo.png"
+st.set_page_config(page_title="Young Warren",page_icon=warren_logo_path)
+
+float_init(theme=True, include_unstable_primary=False)
 
 ##### Define chatbot function #####
 def chatbot(start_msg):
-    if "messages" not in st.session_state: #  Initializes message history.
+    if "messages" not in st.session_state:
         st.session_state["messages"] = []
 
     if "model" not in st.session_state:
-        st.session_state["model"] = "claude-3-5-sonnet-20240620" # Sets a default model if one hasn’t been chosen
+        st.session_state["model"] = "claude-3-5-sonnet-20240620"
 
-    for message in st.session_state["messages"]: # Re-displaying the chat history
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+    # Create scrollable container for messages
+    with st.container():
+        with st.container():
+            for message in st.session_state["messages"]:
+                with st.chat_message(message["role"]):
+                    st.markdown(message["content"])
 
-    if prompt := st.chat_input(start_msg): # Waits for new user input
-        st.session_state["messages"].append({"role": "user", "content": prompt}) # Adds the user message to history
+    # Float input at the bottom
+    with st.container():
+        float_parent(css=float_css_helper(width="30%", bottom="2rem", transition=0))
+        prompt = st.chat_input(start_msg)
+    
+    if prompt:
+        st.session_state["messages"].append({"role": "user", "content": prompt})
 
-        # Grabs the selected video transcript and its categorized behavior type
         current_v_transcript = st.session_state.get("user_select_video", {}).get("transcript", "No transcript available.")
         current_v_type = st.session_state.get("user_select_video", {}).get("video_type_in_app", "unknown")
 
-        # Gets relevant info from both letters and behavioral science books
         retrieved_letters, docs_letter = retrieve_context(prompt, document_type='letters')
         behavioural_science_docs, docs_books = retrieve_context(prompt, document_type='books')
-        
-        # create system prompt based on video type
-        # This is your initial context for the model — a custom “system prompt”
         system_prompt = get_prompt(retrieved_letters, behavioural_science_docs, current_v_transcript, video_in_app_type=current_v_type)
         st.session_state["system_prompt"] = system_prompt
 
-        with st.chat_message("user"): # Renders user input immediately
+        with st.chat_message("user"):
             st.markdown(prompt)
-        
-        with st.chat_message("assistant"): # Streams and displays the assistant's response, then stores it in chat history
+
+        with st.chat_message("assistant"):
             message = st.write_stream(model_res_generator(system_prompt))
-            st.session_state["messages"].append({"role": "assistant", "content": message}) # "assistant": model response
+            st.session_state["messages"].append({"role": "assistant", "content": message})
 
 ##### Function to generate model response #####
 def model_res_generator(system_prompt):
@@ -116,9 +124,6 @@ def model_res_generator(system_prompt):
         yield "Error: Unable to get a response from the model."
 
 ##### app functions #####
-asset_path = './assets/'
-warren_logo_path = asset_path + "V2 young warren logo.png"
-st.set_page_config(page_title="Young Warren",page_icon=warren_logo_path)
 st.image(warren_logo_path,width = 100)
 st.title("pov: ur tired of fake finance bros")
 st.write("young warren is ready to be in your corner")
@@ -137,6 +142,7 @@ with short_col:
         alarm = 1
 
         print(st.session_state["user_select_video"].get("video_type_in_app", "unknown"))
+        print(st.session_state["user_select_video"].get("username", "unknown"))
 
     except:
         st.write("You need to pick a video to analyse first.")
