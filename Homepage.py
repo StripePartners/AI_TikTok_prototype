@@ -83,7 +83,7 @@ def model_res_non_generator(start_prompt):
     max_retries = 3
     retry_delay = 2  # seconds
     
-    client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY")) #os.getenv("ANTHROPIC_API_KEY")  #st.secrets[]
+    client = anthropic.Anthropic(api_key=st.secrets["ANTHROPIC_API_KEY"]) #os.getenv("ANTHROPIC_API_KEY")  #st.secrets[]
 
     for attempt in range(max_retries):
         try:
@@ -152,7 +152,7 @@ def model_res_generator(system_prompt):
     max_retries = 3
     retry_delay = 2  # seconds
 
-    client = anthropic.Client(api_key=os.getenv("ANTHROPIC_API_KEY")) #os.getenv("ANTHROPIC_API_KEY") #st.secrets[]
+    client = anthropic.Client(api_key=st.secrets["ANTHROPIC_API_KEY"]) #os.getenv("ANTHROPIC_API_KEY") #st.secrets[]
 
     for attempt in range(max_retries):
         try:
