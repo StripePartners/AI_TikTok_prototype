@@ -35,7 +35,7 @@ def chatbot(start_msg):
     # Add LLM-generated start message
     current_v_transcript = st.session_state.get("user_select_video", {}).get("transcript", "No transcript available.")
     bullet_points = 3
-    start_prompt = f"Based on the transcript {current_v_transcript}, briefly outline {bullet_points} short (10 words or less) specific questions relevant to information in the transcript that could start a conversation on financial advice. Provide the questions in bullet format beginning with 'Hello! Nice to meet you! You could ask me things like:'"
+    start_prompt = f"Based on the transcript {current_v_transcript}, briefly outline {bullet_points} short (10 words or less) specific questions relevant to information in the transcript that could start a conversation on financial advice. Begin the message with 'Hello! Nice to meet you! You could ask me things like:' followed by the questions in bullet format, with each question starting a new line."
 
     model_response = model_res_non_generator(start_prompt)
     #st.write(model_response.content[0].text)
@@ -183,7 +183,7 @@ def callback(indexes_to_analyse):
     time.sleep(1.5)  # added sleep time to avoid rate limits
     print("Session state",st.session_state["order"],len((indexes_to_analyse)))
 
-    try: #st.session_state["order"] <= len(indexes_to_analyse) - 1: 
+    if st.session_state["order"] <= len(indexes_to_analyse) - 1:
         st.session_state["order"] += 1
         
         i = indexes_to_analyse[st.session_state['order']]
@@ -194,7 +194,7 @@ def callback(indexes_to_analyse):
                                             "creator_tag": df[df['Index'] == i]["creator_tag"].iloc[0],
                                             "creator_profile_url":df[df['Index'] == i]["creator_profile_url"].iloc[0] }
         st.session_state["messages"] = []  # Reset chatbot history
-    except:
+    else:
         st.write("Reached limit on videos to analyse.")
 
 
