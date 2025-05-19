@@ -6,8 +6,6 @@ import os
 from prompt_builder import get_prompt_consistency_eval, get_prompt_consistency_eval_no_kb, get_prompt_eval_strategy, get_prompt_eval_strategy_no_kb
 from retriever import retrieve_context
 
-torch.classes.__path__ = [] 
-
 
 # query the models
 def query_llm(question, model_name, video_transcript, include_context=True, eval_type="consistency"):

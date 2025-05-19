@@ -1,4 +1,6 @@
 ##### Prompt #####
+
+
 # define prompts for different video types
 fomo_prompt = """
 While responding to the user, you have to follow the instructions below:\n

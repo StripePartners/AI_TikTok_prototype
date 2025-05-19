@@ -20,7 +20,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from prompt_builder import get_prompt, get_prompt_consistency_eval
 from retriever import retrieve_context
 
-torch.classes.__path__ = [] 
+#torch.classes.__path__ = [] 
 
 ##### Define chatbot function #####
 def chatbot(start_msg):
@@ -35,7 +35,7 @@ def chatbot(start_msg):
     # Add LLM-generated start message
     current_v_transcript = st.session_state.get("user_select_video", {}).get("transcript", "No transcript available.")
     bullet_points = 3
-    start_prompt = f"Based on the transcript {current_v_transcript}, briefly outline {bullet_points} short (15 words or less) specific questions relevant to information in the transcript that could start a conversation on financial advice. Provide the questions in bullet format beginning with 'Hello! Nice to meet you! You could ask me things like:'"
+    start_prompt = f"Based on the transcript {current_v_transcript}, briefly outline {bullet_points} short (10 words or less) specific questions relevant to information in the transcript that could start a conversation on financial advice. Provide the questions in bullet format beginning with 'Hello! Nice to meet you! You could ask me things like:'"
 
     model_response = model_res_non_generator(start_prompt)
     #st.write(model_response.content[0].text)
@@ -83,7 +83,7 @@ def model_res_non_generator(start_prompt):
     max_retries = 3
     retry_delay = 2  # seconds
     
-    client = anthropic.Anthropic(api_key=st.secrets["ANTHROPIC_API_KEY"]) #os.getenv("ANTHROPIC_API_KEY")
+    client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY")) #os.getenv("ANTHROPIC_API_KEY")  #st.secrets[]
 
     for attempt in range(max_retries):
         try:
@@ -152,7 +152,7 @@ def model_res_generator(system_prompt):
     max_retries = 3
     retry_delay = 2  # seconds
 
-    client = anthropic.Client(api_key=st.secrets["ANTHROPIC_API_KEY"]) #os.getenv("ANTHROPIC_API_KEY")
+    client = anthropic.Client(api_key=os.getenv("ANTHROPIC_API_KEY")) #os.getenv("ANTHROPIC_API_KEY") #st.secrets[]
 
     for attempt in range(max_retries):
         try:
@@ -181,6 +181,8 @@ def model_res_generator(system_prompt):
 # callback to get to the next video (imitate generator functionality)
 def callback(indexes_to_analyse):
     time.sleep(1.5)  # added sleep time to avoid rate limits
+    print("Session state",st.session_state["order"],len((indexes_to_analyse)))
+
     if st.session_state["order"] < len(indexes_to_analyse) - 1: 
         st.session_state["order"] += 1
         
@@ -189,8 +191,8 @@ def callback(indexes_to_analyse):
                                             "transcript":df[df['Index'] == i]["transcript"].iloc[0],
                                             "ocr_captions":ast.literal_eval(df[df['Index'] == i]["OCR_captions"].iloc[0]),
                                             "video_type_in_app": df[df['Index'] == i]["video_type_in_app"].iloc[0],
-                                            "creator_tag": df[df['creator_tag'] == i]["video_type_in_app"].iloc[0],
-                                            "creator_profile_url":df[df['creator_tag'] == i]["creator_profile_url"].iloc[0] }
+                                            "creator_tag": df[df['Index'] == i]["creator_tag"].iloc[0],
+                                            "creator_profile_url":df[df['Index'] == i]["creator_profile_url"].iloc[0] }
         st.session_state["messages"] = []  # Reset chatbot history
     else:
         st.write("Reached limit on videos to analyse.")
@@ -224,6 +226,7 @@ if "user_select_video" not in st.session_state:
                                         "video_type_in_app": df[df['Index'] == i]["video_type_in_app"].iloc[0],
                                         "creator_tag": df[df['Index'] == i]["creator_tag"].iloc[0],
                                         "creator_profile_url":df[df['Index'] == i]["creator_profile_url"].iloc[0] }
+
 
 if "messages" not in st.session_state:      
     st.session_state["messages"] = []  # Reset chatbot history
