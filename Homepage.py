@@ -7,6 +7,7 @@ import os
 import sys
 import pickle
 import json
+import torch
 from langchain.vectorstores import FAISS
 from langchain.embeddings import HuggingFaceEmbeddings
 

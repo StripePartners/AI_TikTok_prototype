@@ -5,6 +5,9 @@ from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
 import time
 
+torch.classes.__path__ = [] 
+
+
 ##### Load FAISS index and metadata #####
 vector_dbs_path = './vector_dbs/'
 faiss_path = vector_dbs_path + "faiss_index"
