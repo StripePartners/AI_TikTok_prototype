@@ -35,7 +35,7 @@ def chatbot(start_msg):
     # Add LLM-generated start message
     current_v_transcript = st.session_state.get("user_select_video", {}).get("transcript", "No transcript available.")
     bullet_points = 3
-    start_prompt = f"Based on the transcript {current_v_transcript}, briefly outline {bullet_points} short (10 words or less) specific questions relevant to information in the transcript that could start a conversation on financial advice. Begin the message with 'Hello! Nice to meet you! You could ask me things like:' followed by the questions in bullet format, with each question starting a new line."
+    start_prompt = f"Based on the transcript {current_v_transcript}, briefly outline {bullet_points} short (10 words or less) specific questions relevant to information in the transcript that could start a conversation on financial advice. Begin the message with 'Hello! Nice to meet you! You could ask me things like:' followed by the questions in a bullet format list, with each question on a new line."
 
     model_response = model_res_non_generator(start_prompt)
     #st.write(model_response.content[0].text)
@@ -233,9 +233,10 @@ if "messages" not in st.session_state:
 
 
 with short_col:
-    
-    #try:
-        st.subheader("Step 1: Watch this")
+           
+    st.subheader("Step 1: Watch this")
+    if st.session_state["order"]<6:
+
         st.video(os.path.join("assets/video_data/videos","video"+str(st.session_state["user_select_video"]["index"]) + ".mp4"))
         #st.link_button(st.markdown(f''':blue[{st.session_state["user_select_video"]["creator_tag"]}]''',unsafe_allow_html=False),st.session_state["user_select_video"]["creator_profile_url"],type="tertiary")
         st.link_button(st.session_state["user_select_video"]["creator_tag"],st.session_state["user_select_video"]["creator_profile_url"],type="secondary")
@@ -248,18 +249,21 @@ with short_col:
         # alarm = 1
 
         # print(st.session_state["user_select_video"].get("video_type_in_app", "unknown"))
+    else:
+        st.write("")
 
-    #except:
-    #    st.write("You need to pick a video to analyse first.")
-
+ 
 
 with long_col:
     st.subheader("Step 2: Talk it out")
-    with st.container(height = 435, border = None):  #manually set # of pixels for height of container
-        if alarm == 1:
-            chatbot("Type to chat")
-        else:
-            chatbot("Type to chat")
+    if st.session_state["order"]<6:
+        with st.container(height = 435, border = None):  #manually set # of pixels for height of container
+            if alarm == 1:
+                chatbot("Type to chat")
+            else:
+                chatbot("Type to chat")
+    else:
+        st.write("Reached limit on videos to analyse.")  
     
 
 # Choose a video to show next
