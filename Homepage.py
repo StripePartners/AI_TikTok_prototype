@@ -19,6 +19,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from prompt_builder import get_prompt, get_prompt_consistency_eval
 from retriever import retrieve_context
 
+torch.classes.__path__ = [] 
+
 ##### Define chatbot function #####
 def chatbot(start_msg):
     
