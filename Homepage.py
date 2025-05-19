@@ -32,7 +32,7 @@ def chatbot(start_msg):
     # Add LLM-generated start message
     current_v_transcript = st.session_state.get("user_select_video", {}).get("transcript", "No transcript available.")
     bullet_points = 3
-    start_prompt = f"Based on the transcript {current_v_transcript}, outline {bullet_points} interesting specific questions relevant to information in the transcript that could start a conversation on financial advice. Provide the questions in bullet format beginning with 'Hello! Nice to meet you! You could ask me things like:'"
+    start_prompt = f"Based on the transcript {current_v_transcript}, briefly outline {bullet_points} short (15 words or less) specific questions relevant to information in the transcript that could start a conversation on financial advice. Provide the questions in bullet format beginning with 'Hello! Nice to meet you! You could ask me things like:'"
 
     model_response = model_res_non_generator(start_prompt)
     #st.write(model_response.content[0].text)
@@ -48,7 +48,7 @@ def chatbot(start_msg):
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    '''if prompt := st.chat_input(start_msg): # Waits for new user input
+    if prompt := st.chat_input(start_msg): # Waits for new user input
         st.session_state["messages"].append({"role": "user", "content": prompt}) # Adds the user message to history
 
         # Grabs the selected video transcript and its categorized behavior type
@@ -69,7 +69,7 @@ def chatbot(start_msg):
         
         with st.chat_message("assistant"): # Streams and displays the assistant's response, then stores it in chat history
             message = st.write_stream(model_res_generator(system_prompt))
-            st.session_state["messages"].append({"role": "assistant", "content": message}) # "assistant": model response'''
+            st.session_state["messages"].append({"role": "assistant", "content": message}) # "assistant": model response
 
 
 
@@ -77,14 +77,32 @@ def chatbot(start_msg):
 
 ##### Function to generate non-stream model response #####
 def model_res_non_generator(start_prompt):
-    client = anthropic.Anthropic(api_key = os.getenv("ANTHROPIC_API_KEY"))
+    max_retries = 3
+    retry_delay = 2  # seconds
+    
+    client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
-    text = client.messages.create(
-                                    model=st.session_state["model"],
-                                    max_tokens=400,
-                                    messages=[{"role":"user","content":start_prompt}],
-                                    ) 
-    return text
+    for attempt in range(max_retries):
+        try:
+            text = client.messages.create(
+                                            model=st.session_state["model"],
+                                            max_tokens=400,
+                                            messages=[{"role":"user","content":start_prompt}],
+                                            ) 
+            return text
+        except Exception as e:
+            if "overloaded" in str(e):
+                st.error(f"Anthropic API is overloaded. Retrying... ({attempt + 1}/{max_retries})")
+                time.sleep(retry_delay)
+                
+            else:
+                st.error(f"An unexpected error occurred: {e}.")
+                break
+    
+    else:
+        st.error("Failed to connect to Anthropic API a response after multiple attempts. Please try again later.")
+        return "Error: Unable to get a response from the model."
+
     
 
 
@@ -103,6 +121,9 @@ def model_res_generator(system_prompt):
     # Start with the system message
     # messages = [{"role": "system", "content": system_prompt}]
     messages = []
+
+    # Added sleep time to avoid API rate limits
+    time.sleep(1.5)
     
     # Append user-assistant history ONLY
     for msg in st.session_state["messages"]:
@@ -156,6 +177,7 @@ def model_res_generator(system_prompt):
 
 # callback to get to the next video (imitate generator functionality)
 def callback(indexes_to_analyse):
+    time.sleep(1.5)  # added sleep time to avoid rate limits
     if st.session_state["order"] < len(indexes_to_analyse) - 1: 
         st.session_state["order"] += 1
         
@@ -163,7 +185,9 @@ def callback(indexes_to_analyse):
         st.session_state["user_select_video"] = {"index":i,
                                             "transcript":df[df['Index'] == i]["transcript"].iloc[0],
                                             "ocr_captions":ast.literal_eval(df[df['Index'] == i]["OCR_captions"].iloc[0]),
-                                            "video_type_in_app": df[df['Index'] == i]["video_type_in_app"].iloc[0]} #or whatever default
+                                            "video_type_in_app": df[df['Index'] == i]["video_type_in_app"].iloc[0],
+                                            "creator_tag": df[df['creator_tag'] == i]["video_type_in_app"].iloc[0],
+                                            "creator_profile_url":df[df['creator_tag'] == i]["creator_profile_url"].iloc[0] }
         st.session_state["messages"] = []  # Reset chatbot history
     else:
         st.write("Reached limit on videos to analyse.")
@@ -184,6 +208,7 @@ alarm = 0 # check if a video was chosen yet
 # Read dataset
 df = pd.read_csv("https://docs.google.com/spreadsheets/d/1naC0k4dQUOXXWEmSdLR3EVbyr8mBUYZ2KwZziwSleUA/export?gid=1702026903&format=csv") # small sample of videos
 indexes_to_analyse = list(df["Index"]) #(i for i in list(df["Index"]))
+print(df.columns)
 
 #Empty dictionary
 if "order" not in st.session_state:
@@ -193,16 +218,22 @@ if "user_select_video" not in st.session_state:
     st.session_state["user_select_video"] = {"index":i,
                                         "transcript":df[df['Index'] == i]["transcript"].iloc[0],
                                         "ocr_captions":ast.literal_eval(df[df['Index'] == i]["OCR_captions"].iloc[0]),
-                                        "video_type_in_app": df[df['Index'] == i]["video_type_in_app"].iloc[0]} #or whatever default
+                                        "video_type_in_app": df[df['Index'] == i]["video_type_in_app"].iloc[0],
+                                        "creator_tag": df[df['Index'] == i]["creator_tag"].iloc[0],
+                                        "creator_profile_url":df[df['Index'] == i]["creator_profile_url"].iloc[0] }
+
 if "messages" not in st.session_state:      
     st.session_state["messages"] = []  # Reset chatbot history
 
 
 with short_col:
     
-    try:
+    #try:
         st.subheader("Step 1: Watch this")
         st.video(os.path.join("assets/video_data/videos","video"+str(st.session_state["user_select_video"]["index"]) + ".mp4"))
+        #st.link_button(st.markdown(f''':blue[{st.session_state["user_select_video"]["creator_tag"]}]''',unsafe_allow_html=False),st.session_state["user_select_video"]["creator_profile_url"],type="tertiary")
+        st.link_button(st.session_state["user_select_video"]["creator_tag"],st.session_state["user_select_video"]["creator_profile_url"],type="secondary")
+
         
         # Retrieve and display the transcript
         # transcript = st.session_state["user_select_video"].get("transcript", "No transcript available.")
@@ -212,8 +243,8 @@ with short_col:
 
         # print(st.session_state["user_select_video"].get("video_type_in_app", "unknown"))
 
-    except:
-        st.write("You need to pick a video to analyse first.")
+    #except:
+    #    st.write("You need to pick a video to analyse first.")
 
 
 with long_col:
