@@ -183,7 +183,7 @@ def callback(indexes_to_analyse):
     time.sleep(1.5)  # added sleep time to avoid rate limits
     print("Session state",st.session_state["order"],len((indexes_to_analyse)))
 
-    if st.session_state["order"] <= len(indexes_to_analyse) - 1: 
+    try st.session_state["order"] <= len(indexes_to_analyse) - 1: 
         st.session_state["order"] += 1
         
         i = indexes_to_analyse[st.session_state['order']]
@@ -194,7 +194,7 @@ def callback(indexes_to_analyse):
                                             "creator_tag": df[df['Index'] == i]["creator_tag"].iloc[0],
                                             "creator_profile_url":df[df['Index'] == i]["creator_profile_url"].iloc[0] }
         st.session_state["messages"] = []  # Reset chatbot history
-    else:
+    except:
         st.write("Reached limit on videos to analyse.")
 
 
