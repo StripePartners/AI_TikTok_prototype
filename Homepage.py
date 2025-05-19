@@ -183,7 +183,7 @@ def callback(indexes_to_analyse):
     time.sleep(1.5)  # added sleep time to avoid rate limits
     print("Session state",st.session_state["order"],len((indexes_to_analyse)))
 
-    try st.session_state["order"] <= len(indexes_to_analyse) - 1: 
+    try: #st.session_state["order"] <= len(indexes_to_analyse) - 1: 
         st.session_state["order"] += 1
         
         i = indexes_to_analyse[st.session_state['order']]
