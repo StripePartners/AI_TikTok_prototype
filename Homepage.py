@@ -10,7 +10,7 @@ import json
 import torch
 from langchain.vectorstores import FAISS
 from langchain.embeddings import HuggingFaceEmbeddings
-from streamlit_float import *
+#from streamlit_float import *
 
 from openai import OpenAI
 from nltk import sent_tokenize
