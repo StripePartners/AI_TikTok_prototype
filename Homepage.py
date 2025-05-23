@@ -10,6 +10,7 @@ import json
 import torch
 from langchain.vectorstores import FAISS
 from langchain.embeddings import HuggingFaceEmbeddings
+from streamlit_float import *
 
 from openai import OpenAI
 from nltk import sent_tokenize
@@ -20,27 +21,35 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from prompt_builder import get_prompt, get_prompt_consistency_eval
 from retriever import retrieve_context
 
+#float_init(theme=True, include_unstable_primary=False)
+
+
 #torch.classes.__path__ = [] 
 
 ##### Define chatbot function #####
 def chatbot(start_msg):
     
-    
+    #button_css = float_css_helper(width="10rem", bottom="0rem", transition=0)
+    #float_parent(css=button_css)
+
     if "messages" not in st.session_state: #  Initializes message history.
         st.session_state["messages"] = []
 
     if "model" not in st.session_state:
         st.session_state["model"] = "claude-3-5-sonnet-20240620" # Sets a default model if one hasn’t been chosen
 
+    
+    prompt = st.chat_input(start_msg)
+    
     # Add LLM-generated start message
     current_v_transcript = st.session_state.get("user_select_video", {}).get("transcript", "No transcript available.")
     bullet_points = 3
-    start_prompt = f"Based on the transcript {current_v_transcript}, briefly outline {bullet_points} short (10 words or less) specific questions relevant to information in the transcript that could start a conversation on financial advice. Begin the message with 'Hello! Nice to meet you! You could ask me things like:' followed by the questions in a bullet format list, with each question on a new line."
+    start_prompt = f"Based on the transcript {current_v_transcript}, briefly outline {bullet_points} short (10 words or less) specific questions relevant to information in the transcript that could start a conversation on financial advice. Begin the message with 'Hello! Nice to meet you! You could ask me things like:' followed by the questions in a bullet format list. Write each bullet point on a new line, leaving a new line in between bullet points."
 
     model_response = model_res_non_generator(start_prompt)
     #st.write(model_response.content[0].text)
 
-    message = st.chat_message("assistant")
+    message = st.chat_message("assistant",avatar=avatar_bot)
     message.write(model_response.content[0].text)
     #print(model_res_non_generator(start_prompt))
     
@@ -51,7 +60,8 @@ def chatbot(start_msg):
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    if prompt := st.chat_input(start_msg): # Waits for new user input
+    if prompt: #:= st.chat_input(start_msg): # Waits for new user input
+        
         st.session_state["messages"].append({"role": "user", "content": prompt}) # Adds the user message to history
 
         # Grabs the selected video transcript and its categorized behavior type
@@ -67,10 +77,10 @@ def chatbot(start_msg):
         system_prompt = get_prompt_consistency_eval(retrieved_letters, behavioural_science_docs, current_v_transcript)
         st.session_state["system_prompt"] = system_prompt
 
-        with st.chat_message("user"): # Renders user input immediately
+        with st.chat_message("user",avatar=avatar_person): # Renders user input immediately
             st.markdown(prompt)
         
-        with st.chat_message("assistant"): # Streams and displays the assistant's response, then stores it in chat history
+        with st.chat_message("assistant",avatar=avatar_bot): # Streams and displays the assistant's response, then stores it in chat history
             message = st.write_stream(model_res_generator(system_prompt))
             st.session_state["messages"].append({"role": "assistant", "content": message}) # "assistant": model response
 
@@ -83,7 +93,7 @@ def model_res_non_generator(start_prompt):
     max_retries = 3
     retry_delay = 2  # seconds
     
-    client = anthropic.Anthropic(api_key=st.secrets["ANTHROPIC_API_KEY"]) #os.getenv("ANTHROPIC_API_KEY")  #st.secrets[]
+    client = anthropic.Anthropic(api_key=st.secrets["ANTHROPIC_API_KEY"]) #os.getenv("ANTHROPIC_API_KEY")  #st.secrets["ANTHROPIC_API_KEY"]
 
     for attempt in range(max_retries):
         try:
@@ -152,7 +162,7 @@ def model_res_generator(system_prompt):
     max_retries = 3
     retry_delay = 2  # seconds
 
-    client = anthropic.Client(api_key=st.secrets["ANTHROPIC_API_KEY"]) #os.getenv("ANTHROPIC_API_KEY") #st.secrets[]
+    client = anthropic.Client(api_key=st.secrets["ANTHROPIC_API_KEY"]) #os.getenv("ANTHROPIC_API_KEY") #st.secrets["ANTHROPIC_API_KEY"]
 
     for attempt in range(max_retries):
         try:
@@ -200,7 +210,10 @@ def callback(indexes_to_analyse):
 
 ##### app functions #####
 asset_path = './assets/'
-warren_logo_path = asset_path + "V2 young warren logo.png"
+
+avatar_bot = asset_path + "V4 avatar bot.png"
+avatar_person = asset_path + "V4 avatar person.png"
+warren_logo_path = asset_path + "V4 COIN logo.png"
 st.set_page_config(page_title="Warren.ai",page_icon=warren_logo_path)
 st.image(warren_logo_path,width = 100)
 st.title("pov: ur tired of fake finance bros")
@@ -263,7 +276,7 @@ with long_col:
             else:
                 chatbot("Type to chat")
     else:
-        st.write("Reached limit on videos to analyse.")  
+        st.write("Reached limit on videos to analyse.")
     
 
 # Choose a video to show next
