@@ -27,7 +27,7 @@ from retriever import retrieve_context
 #torch.classes.__path__ = [] 
 
 ##### Define chatbot function #####
-def chatbot(start_msg):
+def chatbot(prompt):
     
     #button_css = float_css_helper(width="10rem", bottom="0rem", transition=0)
     #float_parent(css=button_css)
@@ -37,26 +37,22 @@ def chatbot(start_msg):
 
     if "model" not in st.session_state:
         st.session_state["model"] = "claude-3-5-sonnet-20240620" # Sets a default model if one hasn’t been chosen
-
-    
-    prompt = st.chat_input(start_msg)
     
     # Add LLM-generated start message
-    current_v_transcript = st.session_state.get("user_select_video", {}).get("transcript", "No transcript available.")
-    question_count = 3
-    start_prompt = f'''Based on the transcript {current_v_transcript}, briefly outline a short summary of the transcript (less than 20 words) followed by {question_count} short (10 words or less) specific questions relevant to information 
-                    in the transcript that could start a conversation on financial advice. Begin the message with 'Hello! Nice to meet you!', followed by the summary introduced by the statement "The TikTok video discusses". 
-                    After, write 'You could ask me things like:' followed by the questions.
-                    Write this in markdown format such that the questions are written in white and highlighted in black and each question begins on a new line, 
-                    leaving a new line in between questions. Questions should not be punctuated and should be writen in lower case.'''
+    # current_v_transcript = st.session_state.get("user_select_video", {}).get("transcript", "No transcript available.")
+    # question_count = 3
+    # start_prompt = f'''Based on the transcript {current_v_transcript}, briefly outline a short summary of the transcript (less than 20 words) followed by {question_count} short (10 words or less) specific questions relevant to information 
+    #                 in the transcript that could start a conversation on financial advice. Begin the message with 'Hello! Nice to meet you!', followed by the summary introduced by the statement "The TikTok video discusses". 
+    #                 After, write 'You could ask me things like:' followed by the questions.
+    #                 Write this in markdown format such that the questions are written in white and highlighted in black and each question begins on a new line, 
+    #                 leaving a new line in between questions. Questions should not be punctuated and should be writen in lower case.'''
 
-
-    
-    model_response = model_res_non_generator(start_prompt)
+    # model_response = model_res_non_generator(start_prompt)
     #st.write(model_response.content[0].text)
 
+    model_response =  st.session_state["user_select_video"]["prompt"]
     message = st.chat_message("assistant",avatar=role_to_image["assistant"])
-    message.markdown(model_response.content[0].text,unsafe_allow_html=True)
+    message.markdown(model_response,unsafe_allow_html=True)
     #print(model_res_non_generator(start_prompt))
     
     #message.write(model_res_non_generator(start_prompt))
@@ -66,7 +62,7 @@ def chatbot(start_msg):
         with st.chat_message(message["role"],avatar = role_to_image[message["role"]]):
             st.markdown(message["content"])
 
-    if prompt: #:= st.chat_input(start_msg): # Waits for new user input
+    if prompt:  # Waits for new user input
         
         st.session_state["messages"].append({"role": "user", "content": prompt}) # Adds the user message to history
 
@@ -211,7 +207,8 @@ def callback(indexes_to_analyse):
                                         "ocr_captions":ast.literal_eval(df[df['Index'] == i]["OCR_captions"].iloc[0]),
                                         "video_type_in_app": df[df['Index'] == i]["video_type_in_app"].iloc[0],
                                         "creator_tag": df[df['Index'] == i]["creator_tag"].iloc[0],
-                                        "creator_profile_url":df[df['Index'] == i]["creator_profile_url"].iloc[0] }
+                                        "creator_profile_url":df[df['Index'] == i]["creator_profile_url"].iloc[0],
+                                        "prompt":df[df['Index'] == i]["prompt"].iloc[0] }
     st.session_state["messages"] = []  # Reset chatbot history
 
 
@@ -229,7 +226,7 @@ st.image(warren_logo_path,width = 100)
 st.title("pov: ur tired of fake finance bros")
 st.write("Warren.ai is ready to be in your corner")
 
-short_col, long_col = st.columns([0.33,0.67])
+short_col, long_col = st.columns([0.4,0.6])
 alarm = 0 # check if a video was chosen yet
 
 
@@ -248,7 +245,8 @@ if "user_select_video" not in st.session_state:
                                         "ocr_captions":ast.literal_eval(df[df['Index'] == i]["OCR_captions"].iloc[0]),
                                         "video_type_in_app": df[df['Index'] == i]["video_type_in_app"].iloc[0],
                                         "creator_tag": df[df['Index'] == i]["creator_tag"].iloc[0],
-                                        "creator_profile_url":df[df['Index'] == i]["creator_profile_url"].iloc[0] }
+                                        "creator_profile_url":df[df['Index'] == i]["creator_profile_url"].iloc[0],
+                                        "prompt":df[df['Index'] == i]["prompt"].iloc[0]}
 
 
 if "messages" not in st.session_state:      
@@ -261,31 +259,20 @@ with short_col:
     if st.session_state["order"]<6:
 
         st.video(os.path.join("assets/video_data/videos","video"+str(st.session_state["user_select_video"]["index"]) + ".mp4"))
-        #st.link_button(st.markdown(f''':blue[{st.session_state["user_select_video"]["creator_tag"]}]''',unsafe_allow_html=False),st.session_state["user_select_video"]["creator_profile_url"],type="tertiary")
         st.link_button(st.session_state["user_select_video"]["creator_tag"],st.session_state["user_select_video"]["creator_profile_url"],type="secondary")
 
-        
-        # Retrieve and display the transcript
-        # transcript = st.session_state["user_select_video"].get("transcript", "No transcript available.")
-        # st.subheader("Transcript")
-        # st.text_area("Video Transcript", transcript, height=200)
-        # alarm = 1
-
-        # print(st.session_state["user_select_video"].get("video_type_in_app", "unknown"))
     else:
         st.write("")
 
- 
 
 with long_col:
     st.subheader("Step 2: Talk it out")
-    with st.container(height = 435, border = None):  #manually set # of pixels for height of container
-        if alarm == 1:
-            chatbot("Type to chat")
-        else:
-            chatbot("Type to chat")
-  
-  
+    #Initialise chat
+    prompt = st.chat_input("Type to chat")
+    
+    with st.container(height = 432, border = None):  #manually set # of pixels for height of container
+
+        chatbot(prompt)
 
 # Choose a video to show next
 var_click1 = st.button("show me another one",type="secondary",key = "button1",use_container_width=True,on_click = callback, args = [indexes_to_analyse])
@@ -299,4 +286,7 @@ st.markdown("""
   }
 </style>
 """, unsafe_allow_html=True)
+
+
+
 
