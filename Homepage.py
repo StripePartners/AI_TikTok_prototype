@@ -26,19 +26,15 @@ from retriever import retrieve_context
 
 #torch.classes.__path__ = [] 
 
-##### Define chatbot function #####
-def chatbot(prompt):
-    
-    #button_css = float_css_helper(width="10rem", bottom="0rem", transition=0)
-    #float_parent(css=button_css)
-
+### Define first message to be included in chat stream
+def first_message():
     if "messages" not in st.session_state: #  Initializes message history.
         st.session_state["messages"] = []
 
     if "model" not in st.session_state:
         st.session_state["model"] = "claude-3-5-sonnet-20240620" # Sets a default model if one hasn’t been chosen
-    
-    # Add LLM-generated start message
+
+    # Add live LLM-generated start message
     # current_v_transcript = st.session_state.get("user_select_video", {}).get("transcript", "No transcript available.")
     # question_count = 3
     # start_prompt = f'''Based on the transcript {current_v_transcript}, briefly outline a short summary of the transcript (less than 20 words) followed by {question_count} short (10 words or less) specific questions relevant to information 
@@ -54,9 +50,15 @@ def chatbot(prompt):
     message = st.chat_message("assistant",avatar=role_to_image["assistant"])
     message.markdown(model_response,unsafe_allow_html=True)
     #print(model_res_non_generator(start_prompt))
-    
+
     #message.write(model_res_non_generator(start_prompt))
     #st.session_state["messages"].append({"role": "assistant", "content": message}) # "assistant": model response
+
+
+
+
+##### Define chatbot function #####
+def chatbot(prompt):
     
     for message in st.session_state["messages"]: # Re-displaying the chat history
         with st.chat_message(message["role"],avatar = role_to_image[message["role"]]):
@@ -248,6 +250,9 @@ if "user_select_video" not in st.session_state:
                                         "creator_profile_url":df[df['Index'] == i]["creator_profile_url"].iloc[0],
                                         "prompt":df[df['Index'] == i]["prompt"].iloc[0]}
 
+if "user_prompt" not in st.session_state:
+    st.session_state["user_prompt"] = ""
+
 
 if "messages" not in st.session_state:      
     st.session_state["messages"] = []  # Reset chatbot history
@@ -255,7 +260,7 @@ if "messages" not in st.session_state:
 
 with short_col:
            
-    st.subheader("Step 1: Watch this")
+    st.subheader("Watch this first")
     if st.session_state["order"]<6:
 
         st.video(os.path.join("assets/video_data/videos","video"+str(st.session_state["user_select_video"]["index"]) + ".mp4"))
@@ -266,16 +271,17 @@ with short_col:
 
 
 with long_col:
-    st.subheader("Step 2: Talk it out")
-    #Initialise chat
-    prompt = st.chat_input("Type to chat")
     
-    with st.container(height = 432, border = None):  #manually set # of pixels for height of container
+    st.subheader("Then talk it out")
+    prompt = st.chat_input("Type to chat")
+    st.session_state["user_prompt"] = prompt
 
-        chatbot(prompt)
-
+    with st.container(height = 432, border = None, key = "container_chat"):  #manually set # of pixels for height of container
+        first_message()
+        chatbot(st.session_state["user_prompt"])
+    
 # Choose a video to show next
-var_click1 = st.button("show me another one",type="secondary",key = "button1",use_container_width=True,on_click = callback, args = [indexes_to_analyse])
+var_click1 = st.button("Try a different video",type="secondary",key = "button1",use_container_width=True,on_click = callback, args = [indexes_to_analyse])
 
 
 # I believe this goes in the file where all the functionality is configured, at the end
