@@ -10,6 +10,7 @@ import json
 import torch
 from langchain.vectorstores import FAISS
 from langchain.embeddings import HuggingFaceEmbeddings
+import re
 #from streamlit_float import *
 
 from openai import OpenAI
@@ -24,7 +25,10 @@ from retriever import retrieve_context
 #float_init(theme=True, include_unstable_primary=False)
 
 
-#torch.classes.__path__ = [] 
+#torch.classes.__path__ = []
+
+def set_selected_question(question_text):
+    st.session_state["selected_question"] = question_text
 
 ##### Define chatbot function #####
 def chatbot(prompt):
@@ -52,7 +56,15 @@ def chatbot(prompt):
 
     model_response =  st.session_state["user_select_video"]["prompt"]
     message = st.chat_message("assistant",avatar=role_to_image["assistant"])
-    message.markdown(model_response,unsafe_allow_html=True)
+    intro = model_response.split("You could ask me things like:")[0]
+    message.markdown(intro+"You could ask me things like:",unsafe_allow_html=True)
+    suggested_questions = re.findall(r'<span.*?>(.*?)</span>', model_response)
+    for question in suggested_questions:
+        st.button(question,
+                  key=question,
+                  on_click=set_selected_question,
+                  args=(question,)) # TO DO: amend styling of buttons
+
     #print(model_res_non_generator(start_prompt))
     
     #message.write(model_res_non_generator(start_prompt))
@@ -62,6 +74,9 @@ def chatbot(prompt):
         with st.chat_message(message["role"],avatar = role_to_image[message["role"]]):
             st.markdown(message["content"])
 
+    if "selected_question" in st.session_state and not prompt:
+        prompt = st.session_state.pop("selected_question")
+    
     if prompt:  # Waits for new user input
         
         st.session_state["messages"].append({"role": "user", "content": prompt}) # Adds the user message to history
