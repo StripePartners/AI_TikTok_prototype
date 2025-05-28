@@ -270,7 +270,7 @@ if "messages" not in st.session_state:
 
 with short_col:
            
-    st.subheader("Step 1: Watch this")
+    st.subheader("Watch this first")
     if st.session_state["order"]<6:
 
         st.video(os.path.join("assets/video_data/videos","video"+str(st.session_state["user_select_video"]["index"]) + ".mp4"))
@@ -281,7 +281,7 @@ with short_col:
 
 
 with long_col:
-    st.subheader("Step 2: Talk it out")
+    st.subheader("Then talk it out")
     #Initialise chat
     prompt = st.chat_input("Type to chat")
     
@@ -290,7 +290,7 @@ with long_col:
         chatbot(prompt)
 
 # Choose a video to show next
-var_click1 = st.button("show me another one",type="secondary",key = "button1",use_container_width=True,on_click = callback, args = [indexes_to_analyse])
+var_click1 = st.button("Try a different video",type="secondary",key = "button1",use_container_width=True,on_click = callback, args = [indexes_to_analyse])
 
 
 # I believe this goes in the file where all the functionality is configured, at the end
@@ -301,7 +301,3 @@ st.markdown("""
   }
 </style>
 """, unsafe_allow_html=True)
-
-
-
-
