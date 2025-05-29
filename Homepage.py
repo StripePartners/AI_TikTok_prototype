@@ -2,7 +2,6 @@
 import streamlit as st
 import pandas as pd
 import ast
-import ollama
 import anthropic
 import os
 import sys
@@ -17,6 +16,7 @@ import re
 from openai import OpenAI
 from nltk import sent_tokenize
 import time
+from streamlit.components.v1 import html
 
 # Add root directory (where AI_TIKTOK_prototype lives) to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -30,6 +30,14 @@ from retriever import retrieve_context
 
 def set_selected_question(question_text):
     st.session_state["selected_question"] = question_text
+
+def open_creator_profile(url):
+    open_script= """
+        <script type="text/javascript">
+            window.open('%s', '_blank').focus();
+        </script>
+    """ % (url)
+    html(open_script)
 
 ##### Define chatbot function #####
 def chatbot(prompt):
@@ -278,8 +286,14 @@ with short_col:
     if st.session_state["order"]<6:
 
         st.video(os.path.join("assets/video_data/videos","video"+str(st.session_state["user_select_video"]["index"]) + ".mp4"))
-        st.link_button(st.session_state["user_select_video"]["creator_tag"],st.session_state["user_select_video"]["creator_profile_url"],type="secondary")
-
+        creator_tag = st.session_state["user_select_video"]["creator_tag"]
+        creator_profile_url = st.session_state["user_select_video"]["creator_profile_url"]
+        st.markdown('<span id="button-standard"></span>', unsafe_allow_html=True)
+        st.button(creator_tag,
+                  key=creator_tag,
+                  on_click=open_creator_profile,
+                  args=(creator_profile_url,),
+                  use_container_width=True)
     else:
         st.write("")
 
@@ -294,7 +308,8 @@ with long_col:
         chatbot(prompt)
 
 # Choose a video to show next
-var_click1 = st.button("Try a different video",type="secondary",key = "button1",use_container_width=True,on_click = callback, args = [indexes_to_analyse])
+st.markdown('<span id="button-standard"></span>', unsafe_allow_html=True)
+var_click1 = st.button("Try a different video",key = "button1",use_container_width=True,on_click = callback, args = [indexes_to_analyse])
 
 
 # I believe this goes in the file where all the functionality is configured, at the end
@@ -318,6 +333,19 @@ st.markdown("""
     border: none;
     text-align: left;
     border-radius: 0;
+  }
+  #button-standard {
+    display: none;
+  }
+  .element-container:has(#button-standard) {
+    display: none;
+  }
+  .element-container:has(#button-standard) + div button {
+    color:white;
+    background-color:black;
+    border: none;
+    text-align: center;
+    border-radius: 5px;
   }
 </style>
 """, unsafe_allow_html=True)
