@@ -58,14 +58,17 @@ def chatbot(prompt):
     model_response =  st.session_state["user_select_video"]["prompt"]
     message = st.chat_message("assistant",avatar=role_to_image["assistant"])
     intro = model_response.split("You could ask me things like:")[0]
-    message.markdown(intro+"You could ask me things like:",unsafe_allow_html=True)
     suggested_questions = re.findall(r'<span.*?>(.*?)</span>', model_response)
-    for question in suggested_questions:
-        st.button(question,
+        
+    with message:
+        st.markdown(intro+"You could ask me things like:",unsafe_allow_html=True)
+        for question in suggested_questions:
+            st.markdown('<span id="button-prompt"></span>', unsafe_allow_html=True)
+            st.button(question,
                   key=question,
                   on_click=set_selected_question,
-                  args=(question,)) # TO DO: amend styling of buttons
-
+                  args=(question,))
+   
     #print(model_res_non_generator(start_prompt))
     
     #message.write(model_res_non_generator(start_prompt))
@@ -299,6 +302,22 @@ st.markdown("""
 <style>
   .stChatInput, .stChatMessage, .stChatMessageAvatarUser, .stExpander, button, .stDataFrameResizable, table, .stCheckbox span, .stWidgetLabel div, .stNumberInputContainer div, .stExpander details, .stDialog div {
   	border-radius: none !important;
+  }
+  .element-container:has(style){
+    display: none;
+  }
+  #button-prompt {
+    display: none;
+  }
+  .element-container:has(#button-prompt) {
+    display: none;
+  }
+  .element-container:has(#button-prompt) + div button {
+    color:white;
+    background-color:black;
+    border: none;
+    text-align: left;
+    border-radius: 0;
   }
 </style>
 """, unsafe_allow_html=True)
