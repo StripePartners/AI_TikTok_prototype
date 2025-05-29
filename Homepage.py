@@ -260,7 +260,7 @@ alarm = 0 # check if a video was chosen yet
 # Read dataset
 df = pd.read_csv("https://docs.google.com/spreadsheets/d/1naC0k4dQUOXXWEmSdLR3EVbyr8mBUYZ2KwZziwSleUA/export?gid=1702026903&format=csv") # small sample of videos
 indexes_to_analyse = list(df["Index"]) #(i for i in list(df["Index"]))
-print(df.columns)
+# print(df.columns)
 
 #Empty dictionary
 if "order" not in st.session_state:
@@ -297,15 +297,36 @@ with short_col:
     else:
         st.write("")
 
-
 with long_col:
     st.subheader("Then talk it out")
     #Initialise chat
-    prompt = st.chat_input("Type to chat")
-    
-    with st.container(height = 432, border = None):  #manually set # of pixels for height of container
+    # prompt = st.chat_input("Type to chat")
 
-        chatbot(prompt)
+    # with st.container(height = 432, border = None):  #manually set # of pixels for height of container
+
+    #     chatbot(prompt)
+
+    chat_container = st.container(height=487, border=None)
+    with chat_container:
+        chatbot(st.session_state.get("submitted_prompt", ""))
+
+    with st.form(key="chat_form", clear_on_submit=True, enter_to_submit=True, border=False):
+        col1, col2 = st.columns([0.85, 0.15])
+        with col1:
+            user_input = st.text_input(label="Type to chat",
+                                       placeholder="Type to chat",
+                                       label_visibility="collapsed",
+                                       key="chat_input")
+        with col2:
+            submitted = st.form_submit_button("",icon=":material/send:", use_container_width=True)
+
+        if submitted and user_input.strip():
+            st.session_state["submitted_prompt"] = user_input
+            del st.session_state["chat_input"]
+            st.rerun()
+        else:
+            st.session_state["submitted_prompt"] = ""
+
 
 # Choose a video to show next
 st.markdown('<span id="button-standard"></span>', unsafe_allow_html=True)
@@ -346,6 +367,9 @@ st.markdown("""
     border: none;
     text-align: center;
     border-radius: 5px;
+  }
+  div[data-testid="InputInstructions"] > span:nth-child(1) {
+    visibility: hidden;
   }
 </style>
 """, unsafe_allow_html=True)
