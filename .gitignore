@@ -16,3 +16,5 @@ assets/books/*
 s2v_old/*
 #ignore
 s2v_reddit_2015_md.tar.gz
+#ignore .streamlit secrets.toml
+.streamlit/secrets.toml

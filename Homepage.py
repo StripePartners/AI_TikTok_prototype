@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import ast
@@ -10,6 +11,7 @@ import json
 import torch
 from langchain.vectorstores import FAISS
 from langchain.embeddings import HuggingFaceEmbeddings
+import re
 #from streamlit_float import *
 
 from openai import OpenAI
@@ -24,17 +26,24 @@ from retriever import retrieve_context
 #float_init(theme=True, include_unstable_primary=False)
 
 
-#torch.classes.__path__ = [] 
+#torch.classes.__path__ = []
 
-### Define first message to be included in chat stream
-def first_message():
+def set_selected_question(question_text):
+    st.session_state["selected_question"] = question_text
+
+##### Define chatbot function #####
+def chatbot(prompt):
+    
+    #button_css = float_css_helper(width="10rem", bottom="0rem", transition=0)
+    #float_parent(css=button_css)
+
     if "messages" not in st.session_state: #  Initializes message history.
         st.session_state["messages"] = []
 
     if "model" not in st.session_state:
         st.session_state["model"] = "claude-3-5-sonnet-20240620" # Sets a default model if one hasn’t been chosen
-
-    # Add live LLM-generated start message
+    
+    # Add LLM-generated start message
     # current_v_transcript = st.session_state.get("user_select_video", {}).get("transcript", "No transcript available.")
     # question_count = 3
     # start_prompt = f'''Based on the transcript {current_v_transcript}, briefly outline a short summary of the transcript (less than 20 words) followed by {question_count} short (10 words or less) specific questions relevant to information 
@@ -48,22 +57,27 @@ def first_message():
 
     model_response =  st.session_state["user_select_video"]["prompt"]
     message = st.chat_message("assistant",avatar=role_to_image["assistant"])
-    message.markdown(model_response,unsafe_allow_html=True)
-    #print(model_res_non_generator(start_prompt))
+    intro = model_response.split("You could ask me things like:")[0]
+    message.markdown(intro+"You could ask me things like:",unsafe_allow_html=True)
+    suggested_questions = re.findall(r'<span.*?>(.*?)</span>', model_response)
+    for question in suggested_questions:
+        st.button(question,
+                  key=question,
+                  on_click=set_selected_question,
+                  args=(question,)) # TO DO: amend styling of buttons
 
+    #print(model_res_non_generator(start_prompt))
+    
     #message.write(model_res_non_generator(start_prompt))
     #st.session_state["messages"].append({"role": "assistant", "content": message}) # "assistant": model response
-
-
-
-
-##### Define chatbot function #####
-def chatbot(prompt):
     
     for message in st.session_state["messages"]: # Re-displaying the chat history
         with st.chat_message(message["role"],avatar = role_to_image[message["role"]]):
             st.markdown(message["content"])
 
+    if "selected_question" in st.session_state and not prompt:
+        prompt = st.session_state.pop("selected_question")
+    
     if prompt:  # Waits for new user input
         
         st.session_state["messages"].append({"role": "user", "content": prompt}) # Adds the user message to history
@@ -250,9 +264,6 @@ if "user_select_video" not in st.session_state:
                                         "creator_profile_url":df[df['Index'] == i]["creator_profile_url"].iloc[0],
                                         "prompt":df[df['Index'] == i]["prompt"].iloc[0]}
 
-if "user_prompt" not in st.session_state:
-    st.session_state["user_prompt"] = ""
-
 
 if "messages" not in st.session_state:      
     st.session_state["messages"] = []  # Reset chatbot history
@@ -271,15 +282,14 @@ with short_col:
 
 
 with long_col:
-    
     st.subheader("Then talk it out")
+    #Initialise chat
     prompt = st.chat_input("Type to chat")
-    st.session_state["user_prompt"] = prompt
-
-    with st.container(height = 432, border = None, key = "container_chat"):  #manually set # of pixels for height of container
-        first_message()
-        chatbot(st.session_state["user_prompt"])
     
+    with st.container(height = 432, border = None):  #manually set # of pixels for height of container
+
+        chatbot(prompt)
+
 # Choose a video to show next
 var_click1 = st.button("Try a different video",type="secondary",key = "button1",use_container_width=True,on_click = callback, args = [indexes_to_analyse])
 
@@ -292,7 +302,3 @@ st.markdown("""
   }
 </style>
 """, unsafe_allow_html=True)
-
-
-
-
