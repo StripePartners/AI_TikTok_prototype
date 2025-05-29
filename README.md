@@ -40,4 +40,6 @@ To start the application, run the following command:
 streamlit run Homepage.py
 ```
 
-- NB: ensure the `assets/video_data/videos` folder is populated with relevant videos.
+NB:
+- ensure the `assets/video_data/videos` folder is populated with relevant videos.
+- ensure that a `.streamlit/secrets.toml` file is created with your `ANTHROPIC_API_KEY` set
