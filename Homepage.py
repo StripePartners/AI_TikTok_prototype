@@ -319,7 +319,6 @@ with long_col:
                                        key="chat_input")
         with col2:
             submitted = st.form_submit_button("",icon=":material/send:", use_container_width=True)
-
         if submitted and user_input.strip():
             st.session_state["submitted_prompt"] = user_input
             del st.session_state["chat_input"]
@@ -370,6 +369,12 @@ st.markdown("""
   }
   div[data-testid="InputInstructions"] > span:nth-child(1) {
     visibility: hidden;
+  }
+  .element-container:has(video) {
+    margin-bottom: -7px !important;
+  }
+  .element-container:has(button[title="{creator_tag}"]) {
+    margin-top: -7px !important;
   }
 </style>
 """, unsafe_allow_html=True)
