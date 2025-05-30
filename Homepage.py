@@ -39,6 +39,11 @@ def open_creator_profile(url):
     """ % (url)
     html(open_script)
 
+# def stream_intro(text, delay=0.05):
+#     for word in text.split(" "):
+#         yield word + " "
+#         time.sleep(delay)
+
 ##### Define chatbot function #####
 def chatbot(prompt):
     
@@ -50,24 +55,15 @@ def chatbot(prompt):
 
     if "model" not in st.session_state:
         st.session_state["model"] = "claude-3-5-sonnet-20240620" # Sets a default model if one hasn’t been chosen
-    
-    # Add LLM-generated start message
-    # current_v_transcript = st.session_state.get("user_select_video", {}).get("transcript", "No transcript available.")
-    # question_count = 3
-    # start_prompt = f'''Based on the transcript {current_v_transcript}, briefly outline a short summary of the transcript (less than 20 words) followed by {question_count} short (10 words or less) specific questions relevant to information 
-    #                 in the transcript that could start a conversation on financial advice. Begin the message with 'Hello! Nice to meet you!', followed by the summary introduced by the statement "The TikTok video discusses". 
-    #                 After, write 'You could ask me things like:' followed by the questions.
-    #                 Write this in markdown format such that the questions are written in white and highlighted in black and each question begins on a new line, 
-    #                 leaving a new line in between questions. Questions should not be punctuated and should be writen in lower case.'''
 
-    # model_response = model_res_non_generator(start_prompt)
-    #st.write(model_response.content[0].text)
+    if "intro_shown" not in st.session_state:
+        st.session_state["intro_shown"] = False
 
     model_response =  st.session_state["user_select_video"]["prompt"]
     message = st.chat_message("assistant",avatar=role_to_image["assistant"])
     intro = model_response.split("You could ask me things like:")[0]
     suggested_questions = re.findall(r'<span.*?>(.*?)</span>', model_response)
-        
+
     with message:
         st.markdown(intro+"You could ask me things like:",unsafe_allow_html=True)
         for question in suggested_questions:
@@ -76,7 +72,27 @@ def chatbot(prompt):
                   key=question,
                   on_click=set_selected_question,
                   args=(question,))
-   
+        
+    # with message:
+    #     if not st.session_state["intro_shown"]:
+    #         st.write_stream(stream_intro(intro+"You could ask me things like:"))
+    #         st.session_state["intro_shown"] = True
+    #         for question in suggested_questions:
+    #             st.markdown('<span id="button-prompt"></span>', unsafe_allow_html=True)
+    #             st.button(question,
+    #                 key=question,
+    #                 on_click=set_selected_question,
+    #                 args=(question,))
+
+    #     else:
+    #         st.markdown(intro+"You could ask me things like:", unsafe_allow_html=True)
+    #         st.markdown('<span id="button-prompt"></span>', unsafe_allow_html=True)
+    #         for question in suggested_questions:
+    #             st.markdown('<span id="button-prompt"></span>', unsafe_allow_html=True)
+    #             st.button(question,
+    #                 key=question,
+    #                 on_click=set_selected_question,
+    #                 args=(question,))
     #print(model_res_non_generator(start_prompt))
     
     #message.write(model_res_non_generator(start_prompt))
@@ -103,7 +119,7 @@ def chatbot(prompt):
         
         # create system prompt based on video type
         # This is your initial context for the model — a custom “system prompt”
-        system_prompt = get_prompt_consistency_eval(retrieved_letters, behavioural_science_docs, current_v_transcript)
+        system_prompt = get_prompt(retrieved_letters, behavioural_science_docs, current_v_transcript)
         st.session_state["system_prompt"] = system_prompt
 
         with st.chat_message("user",avatar=role_to_image["user"]): # Renders user input immediately
@@ -176,18 +192,6 @@ def model_res_generator(system_prompt):
     print("\n--- MESSAGES SENT TO MODEL ---")
     print(json.dumps(messages, indent=2))  # Pretty print for easier reading
 
-    # # Connects to ollama (local LLM runner), with the full message chain
-    # stream = ollama.chat(
-    #     model=st.session_state["model"],
-    #     messages=messages,
-    #     stream=True
-    #     # options={"num_predict": 150} # Set maximum number of tokens to predict
-    # )
-
-    # # Streams response text chunk by chunk
-    # for chunk in stream:
-    #     yield chunk["message"]["content"]
-
     max_retries = 3
     retry_delay = 2  # seconds
 
@@ -237,8 +241,7 @@ def callback(indexes_to_analyse):
                                         "creator_profile_url":df[df['Index'] == i]["creator_profile_url"].iloc[0],
                                         "prompt":df[df['Index'] == i]["prompt"].iloc[0] }
     st.session_state["messages"] = []  # Reset chatbot history
-
-
+    # st.session_state["intro_shown"] = False  # Reset intro stream flag
 
 ##### app functions #####
 asset_path = './assets/'
@@ -303,7 +306,6 @@ with long_col:
     # prompt = st.chat_input("Type to chat")
 
     # with st.container(height = 432, border = None):  #manually set # of pixels for height of container
-
     #     chatbot(prompt)
 
     chat_container = st.container(height=487, border=None)
@@ -361,11 +363,12 @@ st.markdown("""
     display: none;
   }
   .element-container:has(#button-standard) + div button {
-    color:white;
-    background-color:black;
-    border: none;
+    color:black;
+    background-color:white;
+    border: 1 solid black;
     text-align: center;
     border-radius: 5px;
+    box-shadow: 0px 1px 2px rgba(166, 175, 195, 0.25);
   }
   div[data-testid="InputInstructions"] > span:nth-child(1) {
     visibility: hidden;
