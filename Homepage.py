@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import ast
@@ -11,7 +10,6 @@ import torch
 from langchain.vectorstores import FAISS
 from langchain.embeddings import HuggingFaceEmbeddings
 import re
-#from streamlit_float import *
 
 from openai import OpenAI
 from nltk import sent_tokenize
@@ -20,13 +18,8 @@ from streamlit.components.v1 import html
 
 # Add root directory (where AI_TIKTOK_prototype lives) to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from prompt_builder import get_prompt, get_prompt_consistency_eval
+from prompt_builder import get_prompt
 from retriever import retrieve_context
-
-#float_init(theme=True, include_unstable_primary=False)
-
-
-#torch.classes.__path__ = []
 
 def set_selected_question(question_text):
     st.session_state["selected_question"] = question_text
@@ -39,17 +32,22 @@ def open_creator_profile(url):
     """ % (url)
     html(open_script)
 
-# def stream_intro(text, delay=0.05):
-#     for word in text.split(" "):
-#         yield word + " "
-#         time.sleep(delay)
+@st.cache_data
+def load_data():
+    df = pd.read_csv("https://docs.google.com/spreadsheets/d/1naC0k4dQUOXXWEmSdLR3EVbyr8mBUYZ2KwZziwSleUA/export?gid=1702026903&format=csv") # small sample of videos
+    return df
+
+@st.cache_data
+def get_video_metadata(df):
+    video_metadata = {}
+    for i in df["Index"]:
+        video_metadata[i] = {
+            "path": os.path.join("assets/video_data/videos", f"video{i}.mp4"),
+            }
+    return video_metadata
 
 ##### Define chatbot function #####
 def chatbot(prompt):
-    
-    #button_css = float_css_helper(width="10rem", bottom="0rem", transition=0)
-    #float_parent(css=button_css)
-
     if "messages" not in st.session_state: #  Initializes message history.
         st.session_state["messages"] = []
 
@@ -72,31 +70,6 @@ def chatbot(prompt):
                   key=question,
                   on_click=set_selected_question,
                   args=(question,))
-        
-    # with message:
-    #     if not st.session_state["intro_shown"]:
-    #         st.write_stream(stream_intro(intro+"You could ask me things like:"))
-    #         st.session_state["intro_shown"] = True
-    #         for question in suggested_questions:
-    #             st.markdown('<span id="button-prompt"></span>', unsafe_allow_html=True)
-    #             st.button(question,
-    #                 key=question,
-    #                 on_click=set_selected_question,
-    #                 args=(question,))
-
-    #     else:
-    #         st.markdown(intro+"You could ask me things like:", unsafe_allow_html=True)
-    #         st.markdown('<span id="button-prompt"></span>', unsafe_allow_html=True)
-    #         for question in suggested_questions:
-    #             st.markdown('<span id="button-prompt"></span>', unsafe_allow_html=True)
-    #             st.button(question,
-    #                 key=question,
-    #                 on_click=set_selected_question,
-    #                 args=(question,))
-    #print(model_res_non_generator(start_prompt))
-    
-    #message.write(model_res_non_generator(start_prompt))
-    #st.session_state["messages"].append({"role": "assistant", "content": message}) # "assistant": model response
     
     for message in st.session_state["messages"]: # Re-displaying the chat history
         with st.chat_message(message["role"],avatar = role_to_image[message["role"]]):
@@ -138,7 +111,7 @@ def model_res_non_generator(start_prompt):
     max_retries = 3
     retry_delay = 2  # seconds
     
-    client = anthropic.Anthropic(api_key=st.secrets["ANTHROPIC_API_KEY"]) #os.getenv("ANTHROPIC_API_KEY")  #st.secrets["ANTHROPIC_API_KEY"]
+    client = anthropic.Anthropic(api_key=st.secrets["ANTHROPIC_API_KEY"])
 
     for attempt in range(max_retries):
         try:
@@ -161,10 +134,7 @@ def model_res_non_generator(start_prompt):
         st.error("Failed to connect to Anthropic API a response after multiple attempts. Please try again later.")
         return "Error: Unable to get a response from the model."
 
-    
-
-
-
+ 
 
 
 
@@ -174,7 +144,6 @@ def model_res_generator(system_prompt):
     # Starts with the system prompt (sets context, persona, and rules)
     # Then adds the entire user-assistant conversation so far
     # The system prompt only appears once, at the top of the message list
-    # messages = [{"role": "system", "content": context}] + st.session_state["messages"]
     
     # Start with the system message
     # messages = [{"role": "system", "content": system_prompt}]
@@ -195,7 +164,7 @@ def model_res_generator(system_prompt):
     max_retries = 3
     retry_delay = 2  # seconds
 
-    client = anthropic.Client(api_key=st.secrets["ANTHROPIC_API_KEY"]) #os.getenv("ANTHROPIC_API_KEY") #st.secrets["ANTHROPIC_API_KEY"]
+    client = anthropic.Client(api_key=st.secrets["ANTHROPIC_API_KEY"])
 
     for attempt in range(max_retries):
         try:
@@ -241,7 +210,6 @@ def callback(indexes_to_analyse):
                                         "creator_profile_url":df[df['Index'] == i]["creator_profile_url"].iloc[0],
                                         "prompt":df[df['Index'] == i]["prompt"].iloc[0] }
     st.session_state["messages"] = []  # Reset chatbot history
-    # st.session_state["intro_shown"] = False  # Reset intro stream flag
 
 ##### app functions #####
 asset_path = './assets/'
@@ -261,9 +229,10 @@ alarm = 0 # check if a video was chosen yet
 
 
 # Read dataset
-df = pd.read_csv("https://docs.google.com/spreadsheets/d/1naC0k4dQUOXXWEmSdLR3EVbyr8mBUYZ2KwZziwSleUA/export?gid=1702026903&format=csv") # small sample of videos
+df = load_data() # small sample of videos
 indexes_to_analyse = list(df["Index"]) #(i for i in list(df["Index"]))
 # print(df.columns)
+video_metadata = get_video_metadata(df)
 
 #Empty dictionary
 if "order" not in st.session_state:
@@ -282,13 +251,14 @@ if "user_select_video" not in st.session_state:
 if "messages" not in st.session_state:      
     st.session_state["messages"] = []  # Reset chatbot history
 
+current_video = video_metadata[st.session_state["user_select_video"]["index"]]
 
 with short_col:
            
     st.subheader("Watch this first")
     if st.session_state["order"]<6:
 
-        st.video(os.path.join("assets/video_data/videos","video"+str(st.session_state["user_select_video"]["index"]) + ".mp4"))
+        st.video(current_video["path"])
         creator_tag = st.session_state["user_select_video"]["creator_tag"]
         creator_profile_url = st.session_state["user_select_video"]["creator_profile_url"]
         st.markdown('<span id="button-standard"></span>', unsafe_allow_html=True)
@@ -303,11 +273,6 @@ with short_col:
 with long_col:
     st.subheader("Then talk it out")
     #Initialise chat
-    # prompt = st.chat_input("Type to chat")
-
-    # with st.container(height = 432, border = None):  #manually set # of pixels for height of container
-    #     chatbot(prompt)
-
     chat_container = st.container(height=487, border=None)
     with chat_container:
         chatbot(st.session_state.get("submitted_prompt", ""))
@@ -334,7 +299,7 @@ st.markdown('<span id="button-standard"></span>', unsafe_allow_html=True)
 var_click1 = st.button("Try a different video",key = "button1",use_container_width=True,on_click = callback, args = [indexes_to_analyse])
 
 
-# I believe this goes in the file where all the functionality is configured, at the end
+# Custom CSS
 st.markdown("""
 <style>
   .stChatInput, .stChatMessage, .stChatMessageAvatarUser, .stExpander, button, .stDataFrameResizable, table, .stCheckbox span, .stWidgetLabel div, .stNumberInputContainer div, .stExpander details, .stDialog div {
