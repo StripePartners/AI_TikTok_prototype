@@ -218,11 +218,10 @@ avatar_bot = asset_path + "V4 avatar bot.png"
 avatar_person = asset_path + "V4 avatar person.png"
 role_to_image = {"assistant":avatar_bot,"user":avatar_person}
 
-warren_logo_path = asset_path + "V4 COIN logo small.png"
+warren_logo_path = asset_path + "V4 COIN logo.png"
 st.set_page_config(page_title="Warren.ai",page_icon=warren_logo_path)
 st.image(warren_logo_path,width = 100)
-st.title("pov: ur tired of fake finance bros")
-st.write("Warren.ai is ready to be in your corner")
+st.title("ready to be in your corner")
 
 short_col, long_col = st.columns([0.4,0.6])
 alarm = 0 # check if a video was chosen yet
